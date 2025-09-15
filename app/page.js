@@ -1,7 +1,5 @@
 import Cta from "./_components/Cta";
 import FadeInSection from "./_components/FadeInSection";
-import Footer from "./_components/Footer";
-import Header from "./_components/Header";
 import Hero from "./_components/Hero";
 import LastBlogs from "./_components/LastBlogs";
 
@@ -16,7 +14,6 @@ export const metadata = {
 export default function Page() {
   return (
     <div>
-      <Header />
       <FadeInSection>
         <Hero />
       </FadeInSection>
@@ -28,7 +25,6 @@ export default function Page() {
       <FadeInSection>
         <Cta />
       </FadeInSection>
-      <Footer />
     </div>
   );
 }

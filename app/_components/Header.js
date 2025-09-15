@@ -4,9 +4,9 @@ import Button from "./Button";
 
 function Header() {
   return (
-    <header className="py-8 px-10 flex items-center justify-between">
+    <header className="grid grid-cols-3 items-center py-8 px-10">
       <Logo />
-      <nav>
+      <nav className="justify-self-center">
         <Link
           href="/blogs"
           className="font-medium border-b border-b-darkGreen pb-0.5 px-0.5 hover:px-2.5 transition-all duration-300 text-base"
@@ -14,7 +14,9 @@ function Header() {
           Explore Blogs
         </Link>
       </nav>
-      <Button href="/signup">Get Started</Button>
+      <div className="justify-self-end">
+        <Button href="/signup">Get Started</Button>
+      </div>
     </header>
   );
 }

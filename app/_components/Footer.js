@@ -4,9 +4,9 @@ import Button from "./Button";
 
 function Footer() {
   return (
-    <footer className="py-8 px-10 flex items-center justify-between bg-darkGreen text-background">
+    <footer className="grid grid-cols-3 items-center py-6 px-10 bg-darkGreen text-background">
       <Logo color="background" />
-      <nav>
+      <nav className="justify-self-center">
         <Link
           href="/blogs"
           className="font-medium border-b border-b-background pb-0.5 px-0.5 hover:px-2.5 transition-all duration-300 text-base"
@@ -14,8 +14,7 @@ function Footer() {
           Explore Blogs
         </Link>
       </nav>
-
-      <div className="font-semibold text-sm">
+      <div className="justify-self-end text-sm font-semibold text-right">
         <p>© 2025 Chronicle. All rights reserved.</p>
         <p>
           Created by{" "}
