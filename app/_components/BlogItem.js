@@ -1,13 +1,10 @@
 import Link from "next/link";
-import {
-  formatDate,
-  getContrastingTextColor,
-  truncateText,
-} from "../_lib/helper";
+import { formatDate, truncateText } from "../_lib/helper";
+import CategoryBadge from "./CategoryBadge";
 
 function BlogItem({ blog }) {
   return (
-    <div className="bg-lightGreen w-sm p-5 rounded">
+    <div className="bg-lightGreen w-sm p-5 rounded h-auto">
       <div className="flex items-center gap-2.5 mb-4">
         <div className="bg-primary w-8 aspect-square rounded-full"></div>
         <span className="text-sm font-semibold">{blog.author}</span>
@@ -20,17 +17,10 @@ function BlogItem({ blog }) {
         >
           {blog.title}
         </Link>
-        <Link
-          style={{
-            backgroundColor: blog.category.bgColor,
-            color: getContrastingTextColor(blog.category.bgColor),
-          }}
-          className="text-xs py-0.5 px-2 rounded"
-          href={`/blogs?category=${blog.category.name.toLowerCase()}`}
-        >
+        <CategoryBadge bgColor={blog.category.bgColor}>
           {blog.category.name}
-        </Link>
-        <p className="text-sm mt-2 font-medium">
+        </CategoryBadge>
+        <p className="text-sm mt-2 font-medium line-clamp-4">
           {truncateText(blog.content, 250)}
         </p>
       </div>
