@@ -21,11 +21,16 @@ function Button({
   href,
   bgColor = "primary",
   textColor = "background",
+  borderColor,
   additionalClasses = "",
+  onClick,
+  type = "button",
 }) {
   const styles = `${bgClassMap[bgColor] || "bg-primary"} ${
     textClassMap[textColor] || "text-background"
-  } w-max py-1.5 px-3.5 rounded text-sm font-semibold cursor-pointer hover:opacity-90 transition-all duration-300 ${additionalClasses}`;
+  } w-max py-1.5 px-3.5 rounded text-sm font-semibold cursor-pointer hover:opacity-90 transition-all duration-300 ${additionalClasses} ${
+    borderColor ? `border border-${borderColor}` : ""
+  }`;
 
   if (href)
     return (
@@ -34,7 +39,11 @@ function Button({
       </Link>
     );
 
-  return <button className={styles}>{children}</button>;
+  return (
+    <button className={styles} onClick={onClick} type={type}>
+      {children}
+    </button>
+  );
 }
 
 export default Button;

@@ -31,6 +31,22 @@ export function truncateText(text, numCharacters) {
 
 export function formatDate(dateString) {
   const date = new Date(dateString);
+  const now = new Date();
+
+  const dateOnly = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate()
+  );
+  const nowOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+  const diffTime = nowOnly - dateOnly;
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+  if (diffDays === 0) return "Today";
+  if (diffDays === 1) return "Yesterday";
+  if (diffDays < 7) return `${diffDays} days ago`;
+
   return date.toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",

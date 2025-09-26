@@ -1,0 +1,14 @@
+function InputTextarea({ id, placeholder, row = 3, autoFocus }) {
+  return (
+    <textarea
+      name={id}
+      id={id}
+      className="block border-mediumGreen border rounded px-3 py-2 text-sm font-medium placeholder:text-mediumGreen/60 autofill:bg-background focus:outline-0 w-full"
+      placeholder={placeholder}
+      rows={row}
+      autoFocus={autoFocus}
+    ></textarea>
+  );
+}
+
+export default InputTextarea;

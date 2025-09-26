@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { getContrastingTextColor } from "../_lib/helper";
 
-function CategoryBadge({ children, bgColor }) {
+function CategoryBadge({ children, bgColor, scale = 1 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -19,6 +19,7 @@ function CategoryBadge({ children, bgColor }) {
       style={{
         backgroundColor: bgColor,
         color: getContrastingTextColor(bgColor),
+        scale: scale,
       }}
       className="text-xs py-0.5 px-2 rounded cursor-pointer"
       onClick={handleCategoryClick}
