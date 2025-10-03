@@ -17,7 +17,7 @@ const strokeClassMap = {
 
 function Logo({ color = "primary" }) {
   return (
-    <Link href="/" className="flex items-center gap-1.5">
+    <Link href="/" className="flex items-center gap-1.5 w-max">
       <span
         className={`text-2xl font-semibold ${
           colorClassMap[color] || "text-primary"
