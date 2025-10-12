@@ -1,7 +1,10 @@
+import BlogLikeButton from "@/app/_components/BlogLikeButton";
 import Button from "@/app/_components/Button";
 import CategoryBadge from "@/app/_components/CategoryBadge";
 import CommentSection from "@/app/_components/CommentSection";
 import InputTextarea from "@/app/_components/InputTextarea";
+import ScrollToCommentButton from "@/app/_components/ScrollToCommentsButton";
+import ShareButton from "@/app/_components/ShareButton";
 import { formatDate } from "@/app/_lib/helper";
 import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
 import { FaArrowRight } from "react-icons/fa6";
@@ -125,6 +128,29 @@ const blog = {
   date: "2025-09-21",
 };
 
+const blogLikes = [
+  {
+    createdAt: "2025-10-01T09:17:00.000Z",
+    userId: "user_002",
+    blogId: "1",
+  },
+  {
+    createdAt: "2025-10-01T09:20:00.000Z",
+    userId: "user_003",
+    blogId: "1",
+  },
+  {
+    createdAt: "2025-10-01T09:22:00.000Z",
+    userId: "user_004",
+    blogId: "1",
+  },
+  {
+    createdAt: "2025-10-01T09:25:00.000Z",
+    userId: "user_005",
+    blogId: "1",
+  },
+];
+
 export default async function Page({ params }) {
   const { blogId } = await params;
   const authorized = true;
@@ -152,7 +178,14 @@ export default async function Page({ params }) {
       </div>
 
       {/* Image */}
-      <div className="w-4xl h-[500px] bg-primary mt-4 rounded"></div>
+      <div className="flex items-start justify-between">
+        <div className="w-4xl h-[500px] bg-primary mt-4 rounded"></div>
+        <div className="space-y-6">
+          <BlogLikeButton blogLikes={blogLikes} blogId={blogId} />
+          <ScrollToCommentButton />
+          <ShareButton />
+        </div>
+      </div>
 
       {/* Content */}
       <div
@@ -161,7 +194,9 @@ export default async function Page({ params }) {
       ></div>
 
       {/* Comments */}
-      <h2 className="text-3xl font-bold mt-10">Comments</h2>
+      <h2 className="text-3xl font-bold mt-10" id="comments">
+        Comments
+      </h2>
       {authorized ? (
         <div className="flex flex-col mt-6 w-full">
           <span className="text-sm font-semibold mb-1.5">

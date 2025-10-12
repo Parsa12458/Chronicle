@@ -2,6 +2,7 @@ import "@/app/_styles/index.css";
 import { Nunito } from "next/font/google";
 import Header from "./_components/Header";
 import Footer from "./_components/Footer";
+import { Toaster } from "react-hot-toast";
 
 const nunito = Nunito({
   subsets: ["latin"],
@@ -25,6 +26,14 @@ export default function RootLayout({ children }) {
         <Header />
         {children}
         <Footer />
+        <Toaster
+          position="top-center"
+          reverseOrder={true}
+          containerClassName="mt-2"
+          toastOptions={{
+            className: "!px-4 font-medium !max-w-full",
+          }}
+        />
       </body>
     </html>
   );
