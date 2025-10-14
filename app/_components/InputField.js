@@ -5,6 +5,8 @@ function InputField({
   type = "text",
   defaultValue = "",
   disabled = false,
+  onChange,
+  accept,
 }) {
   return (
     <div className="flex flex-col text-left">
@@ -20,6 +22,8 @@ function InputField({
         className="rounded border border-mediumGreen bg-transparent px-3 py-1.5 text-sm font-medium placeholder:text-mediumGreen/60 autofill:bg-background focus:outline-0"
         disabled={disabled}
         defaultValue={defaultValue}
+        onChange={onChange}
+        accept={accept}
       />
     </div>
   );

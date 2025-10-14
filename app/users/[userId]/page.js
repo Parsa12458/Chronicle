@@ -119,7 +119,7 @@ export default async function Page({ params }) {
         </div>
       </div>
 
-      <UserEditButton />
+      <UserEditButton userId={userId} />
     </div>
   );
 }

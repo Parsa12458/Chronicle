@@ -4,8 +4,9 @@ import { useState, useRef, useEffect } from "react";
 import { MdEdit } from "react-icons/md";
 import { FaUserEdit } from "react-icons/fa";
 import { TiDocumentAdd } from "react-icons/ti";
+import Link from "next/link";
 
-export default function UserEditButton() {
+export default function UserEditButton({ userId }) {
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
 
@@ -35,10 +36,13 @@ export default function UserEditButton() {
             : "opacity-0 scale-95 pointer-events-none"
         }`}
       >
-        <button className="text-left bg-mediumGreen text-background rounded py-1.5 px-3 cursor-pointer flex items-center gap-2 transition-all duration-200 hover:bg-[#3f4e42]">
+        <Link
+          className="text-left bg-mediumGreen text-background rounded py-1.5 px-3 cursor-pointer flex items-center gap-2 transition-all duration-200 hover:bg-[#3f4e42]"
+          href={`/users/${userId}/edit`}
+        >
           <FaUserEdit size={18} className="fill-background" />
           <span>Edit Account</span>
-        </button>
+        </Link>
         <button className="text-left bg-mediumGreen text-background rounded py-1.5 px-3 cursor-pointer flex items-center gap-2 transition-all duration-200 hover:bg-[#3f4e42]">
           <TiDocumentAdd size={21} className="fill-background" />
           <span>Add Blog</span>

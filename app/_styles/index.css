@@ -8,3 +8,11 @@
   --color-darkGreen: #202721;
   --color-lightGreen: #e2ece3;
 }
+/* file upload button */
+input[type="file"] {
+  @apply text-xs leading-5;
+}
+
+input[type="file"]::file-selector-button {
+  @apply bg-primary text-background mr-1.5 cursor-pointer rounded border px-2 py-1 text-xs;
+}
