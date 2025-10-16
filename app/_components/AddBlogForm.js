@@ -42,7 +42,7 @@ function AddBlogForm() {
   function handleSubmit(e) {
     e.preventDefault();
 
-    const contentDelta = editorRef.current?.getHTML();
+    const contentDelta = editorRef.current?.getContent();
     console.log(contentDelta, category);
   }
 

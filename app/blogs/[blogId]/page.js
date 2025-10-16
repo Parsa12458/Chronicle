@@ -14,113 +14,176 @@ const blog = {
   title: "How to Drink Water Consistently?",
   content: {
     ops: [
-      { insert: "💧 12 Simple Ways to Drink More Water" },
-      { insert: "\n", attributes: { header: 1 } },
-
       {
-        insert:
-          "Your body is about 70% water, and drinking enough of it is vital for optimal health. Water plays many roles, including:",
+        attributes: {
+          size: "huge",
+        },
+        insert: "Huge",
       },
-      { insert: "\n" },
-
-      { insert: "Maintaining electrolyte balance and blood pressure" },
-      { insert: "\n", attributes: { list: "bullet" } },
-      { insert: "Lubricating joints" },
-      { insert: "\n", attributes: { list: "bullet" } },
-      { insert: "Regulating body temperature" },
-      { insert: "\n", attributes: { list: "bullet" } },
-      { insert: "Promoting cell health" },
-      { insert: "\n", attributes: { list: "bullet" } },
-
-      { insert: "1. 🧠 Understand Your Fluid Needs" },
-      { insert: "\n", attributes: { header: 2 } },
-
       {
-        insert:
-          "The common “8 cups a day” rule (64 oz / 1,920 ml) isn’t scientifically grounded.",
+        insert: "\n",
       },
-      { insert: "\n" },
-      { insert: "The National Academy of Medicine recommends:" },
-      { insert: "\n" },
-      { insert: "Men: 125 oz (3,700 ml)" },
-      { insert: "\n", attributes: { list: "bullet" } },
-      { insert: "Women: 90 oz (2,700 ml)" },
-      { insert: "\n", attributes: { list: "bullet" } },
       {
-        insert:
-          "Fluid needs vary based on activity level, climate, and health status. Listen to your thirst — but increase intake if you exercise, work outdoors, or live in a hot climate.",
+        attributes: {
+          size: "large",
+        },
+        insert: "Large",
       },
-      { insert: "\n" },
-
-      { insert: "2. 🎯 Set a Daily Goal" },
-      { insert: "\n", attributes: { header: 2 } },
-
       {
-        insert:
-          "Setting a goal can motivate lasting change. Use the SMART framework:",
+        insert: "\nNormal\n",
       },
-      { insert: "\n" },
-      { insert: "Specific" },
-      { insert: "\n", attributes: { list: "bullet" } },
-      { insert: "Measurable" },
-      { insert: "\n", attributes: { list: "bullet" } },
-      { insert: "Attainable" },
-      { insert: "\n", attributes: { list: "bullet" } },
-      { insert: "Realistic" },
-      { insert: "\n", attributes: { list: "bullet" } },
-      { insert: "Time-bound" },
-      { insert: "\n", attributes: { list: "bullet" } },
       {
-        insert:
-          "Example: “Drink 32 oz (960 ml) of water daily.” Track your progress to build the habit.",
+        attributes: {
+          size: "small",
+        },
+        insert: "small",
       },
-      { insert: "\n" },
-
-      { insert: "3. 🚰 Keep a Reusable Water Bottle With You" },
-      { insert: "\n", attributes: { header: 2 } },
-
       {
-        insert:
-          "Makes water accessible wherever you are — home, work, school, or on the go.",
+        insert: "\n",
       },
-      { insert: "\n" },
-      { insert: "Acts as a visual cue to drink more." },
-      { insert: "\n" },
-      { insert: "Eco-friendly alternative to single-use plastic bottles." },
-      { insert: "\n" },
-
-      { insert: "4. ⏰ Set Reminders" },
-      { insert: "\n", attributes: { header: 2 } },
-
       {
-        insert:
-          "Use apps or alarms to prompt hydration. Try reminders every 30 minutes or hourly refills. Especially helpful if you’re forgetful or busy.",
+        attributes: {
+          bold: true,
+        },
+        insert: "bold",
       },
-      { insert: "\n" },
-
-      { insert: "5. 🔄 Replace Other Drinks With Water" },
-      { insert: "\n", attributes: { header: 2 } },
-
       {
-        insert:
-          "Swap soda, juice, and sports drinks for water. These drinks often contain added sugars, which can harm your health.",
+        insert: "\n",
       },
-      { insert: "\n" },
       {
-        insert:
-          "Limit added sugar to <5% of daily calories — one soda can exceed this.",
+        attributes: {
+          italic: true,
+        },
+        insert: "italic",
       },
-      { insert: "\n" },
       {
-        insert:
-          "High sugar intake is linked to obesity, type 2 diabetes, and heart disease.",
+        insert: "\n",
       },
-      { insert: "\n" },
       {
-        insert:
-          "Water is a simple, cost-effective way to cut calories and improve health.",
+        attributes: {
+          underline: true,
+        },
+        insert: "underline",
       },
-      { insert: "\n" },
+      {
+        insert: "\n",
+      },
+      {
+        attributes: {
+          strike: true,
+        },
+        insert: "line-through",
+      },
+      {
+        insert: "\n",
+      },
+      {
+        attributes: {
+          color: "#e60000",
+        },
+        insert: "red text",
+      },
+      {
+        insert: "\n",
+      },
+      {
+        attributes: {
+          background: "#fdd835",
+        },
+        insert: "yellow background",
+      },
+      {
+        insert: "\nquote",
+      },
+      {
+        attributes: {
+          blockquote: true,
+        },
+        insert: "\n",
+      },
+      {
+        insert: "code",
+      },
+      {
+        attributes: {
+          "code-block": "plain",
+        },
+        insert: "\n",
+      },
+      {
+        insert: "one numbered list",
+      },
+      {
+        attributes: {
+          list: "ordered",
+        },
+        insert: "\n",
+      },
+      {
+        insert: "two",
+      },
+      {
+        attributes: {
+          list: "ordered",
+        },
+        insert: "\n",
+      },
+      {
+        insert: "three",
+      },
+      {
+        attributes: {
+          list: "ordered",
+        },
+        insert: "\n",
+      },
+      {
+        insert: "bullet",
+      },
+      {
+        attributes: {
+          list: "bullet",
+        },
+        insert: "\n",
+      },
+      {
+        insert: "bullet2",
+      },
+      {
+        attributes: {
+          list: "bullet",
+        },
+        insert: "\n",
+      },
+      {
+        insert: "bullet3",
+      },
+      {
+        attributes: {
+          list: "bullet",
+        },
+        insert: "\n",
+      },
+      {
+        insert: "right aligned",
+      },
+      {
+        attributes: {
+          align: "right",
+          direction: "rtl",
+        },
+        insert: "\n",
+      },
+      {
+        insert: "centered",
+      },
+      {
+        attributes: {
+          direction: "rtl",
+          align: "center",
+        },
+        insert: "\n",
+      },
     ],
   },
   category: { name: "Personal", bgColor: "#f87171" },
@@ -157,6 +220,7 @@ export default async function Page({ params }) {
 
   const converter = new QuillDeltaToHtmlConverter(blog.content.ops, {
     multiLineParagraph: false,
+    inlineStyles: true,
   });
   const blogHtml = converter.convert();
 
@@ -189,7 +253,7 @@ export default async function Page({ params }) {
 
       {/* Content */}
       <div
-        className="prose mt-10 max-w-none font-medium border-b-2 pb-10 border-primary"
+        className="prose mt-10 max-w-none font-medium border-b-2 pb-10 border-primary [&>*]:my-1 [&>p]:leading-relaxed"
         dangerouslySetInnerHTML={{ __html: blogHtml }}
       ></div>
 
