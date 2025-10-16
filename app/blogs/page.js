@@ -240,8 +240,18 @@ export default async function Page({ searchParams }) {
       <div className="flex gap-2 mb-6">
         <InputField id="search" placeholder="Search blog posts..." />
         <Button>Search</Button>
-        <InputSelect label="category" id="category" options={categories} />
-        <InputSelect label="sort by" id="sortBy" options={sortByOptions} />
+        <InputSelect
+          label="category"
+          id="category"
+          options={categories}
+          paramEnabled={true}
+        />
+        <InputSelect
+          label="sort by"
+          id="sortBy"
+          options={sortByOptions}
+          paramEnabled={true}
+        />
       </div>
 
       <div className="flex gap-6 flex-wrap justify-center">

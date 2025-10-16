@@ -14,5 +14,5 @@ input[type="file"] {
 }
 
 input[type="file"]::file-selector-button {
-  @apply bg-primary text-background mr-1.5 cursor-pointer rounded border px-2 py-1 text-xs;
+  @apply bg-primary text-background mr-1.5 cursor-pointer rounded border px-2 text-[10px];
 }
