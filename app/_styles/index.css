@@ -16,3 +16,21 @@ input[type="file"] {
 input[type="file"]::file-selector-button {
   @apply bg-primary text-background mr-1.5 cursor-pointer rounded border px-2 text-[10px];
 }
+
+/* Loader */
+.loader {
+  width: 50px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(farthest-side, #6f8772 94%, #0000) top/8px 8px
+      no-repeat,
+    conic-gradient(#0000 30%, #6f8772);
+  mask: radial-gradient(farthest-side, #0000 calc(100% - 8px), #000 0);
+  -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 8px), #000 0);
+  animation: spinner 1s infinite linear;
+}
+@keyframes spinner {
+  100% {
+    transform: rotate(1turn);
+  }
+}

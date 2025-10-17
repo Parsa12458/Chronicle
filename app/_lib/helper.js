@@ -33,14 +33,19 @@ export function formatDate(dateString) {
   const date = new Date(dateString);
   const now = new Date();
 
-  const dateOnly = new Date(
-    date.getFullYear(),
-    date.getMonth(),
-    date.getDate()
+  // Normalize both dates to UTC midnight
+  const dateUTC = Date.UTC(
+    date.getUTCFullYear(),
+    date.getUTCMonth(),
+    date.getUTCDate()
   );
-  const nowOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const nowUTC = Date.UTC(
+    now.getUTCFullYear(),
+    now.getUTCMonth(),
+    now.getUTCDate()
+  );
 
-  const diffTime = nowOnly - dateOnly;
+  const diffTime = nowUTC - dateUTC;
   const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
   if (diffDays === 0) return "Today";
@@ -52,4 +57,13 @@ export function formatDate(dateString) {
     month: "short",
     day: "numeric",
   });
+}
+
+export function extractTextFromDelta(delta) {
+  if (!delta || !Array.isArray(delta.ops)) return "";
+
+  return delta.ops
+    .map((op) => (typeof op.insert === "string" ? op.insert : ""))
+    .join("")
+    .trim();
 }

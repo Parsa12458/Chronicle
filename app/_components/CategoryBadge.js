@@ -3,13 +3,13 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { getContrastingTextColor } from "../_lib/helper";
 
-function CategoryBadge({ children, bgColor, scale = 1 }) {
+function CategoryBadge({ children, bgColor, scale = 1, param }) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const handleCategoryClick = () => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set("category", children.toLowerCase());
+    params.set("category", param);
 
     router.push(`/blogs?${params.toString()}`);
   };

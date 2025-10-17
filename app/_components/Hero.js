@@ -17,6 +17,7 @@ function Hero() {
         src={heroIllustration}
         alt="share opinion illustration"
         className="w-5/12"
+        priority
       />
     </section>
   );
