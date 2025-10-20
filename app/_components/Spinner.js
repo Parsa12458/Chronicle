@@ -1,5 +1,13 @@
-function Spinner() {
-  return <div className="loader mx-auto mt-12 mb-20"></div>;
+function Spinner({ isFull = true }) {
+  return (
+    <div
+      className={`w-full mt-12 mb-20 ${
+        isFull ? "min-h-[calc(100vh-186px)]" : ""
+      }`}
+    >
+      <div className="loader mx-auto"></div>
+    </div>
+  );
 }
 
 export default Spinner;

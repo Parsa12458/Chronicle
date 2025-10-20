@@ -10,7 +10,7 @@ function LastBlogs() {
       <h2 className="text-5xl font-medium text-center mb-10">Last Blogs</h2>
 
       <ErrorBoundary FallbackComponent={Error}>
-        <Suspense fallback={<Spinner />}>
+        <Suspense fallback={<Spinner isFull={false} />}>
           <LastBlogsList />
         </Suspense>
       </ErrorBoundary>

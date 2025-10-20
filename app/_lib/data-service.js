@@ -1,6 +1,41 @@
 import toast from "react-hot-toast";
 import { supabase } from "./supabase";
 
+export async function getBlogs(filters = {}) {
+  const { category, sortBy, search } = filters;
+
+  let query = supabase.from("blogs").select("*");
+
+  // Filter by categoryId
+  if (category?.id && category?.key !== "all") {
+    query = query.eq("categoryId", category?.id);
+  }
+
+  // Filter by search term
+  if (search?.trim()) {
+    const terms = search.trim().split(/\s+/); // split by space
+    const ilikeFilters = terms.map((term) => `title.ilike.%${term}%`).join(",");
+
+    query = query.or(ilikeFilters);
+  }
+
+  // Sort by selected option
+  if (sortBy === "newest") {
+    query = query.order("createdAt", { ascending: false });
+  } else if (sortBy === "oldest") {
+    query = query.order("createdAt", { ascending: true });
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    console.error(error);
+    toast.error(error.message);
+  }
+
+  return data;
+}
+
 export async function getLastBlogs() {
   const { data, error } = await supabase.from("blogs").select("*").range(0, 5);
 

@@ -61,11 +61,13 @@ function InputSelect({
         onChange={handleChange}
         className="rounded border border-mediumGreen bg-transparent px-4 py-1.5 text-sm font-medium outline-none appearance-none min-w-36"
       >
-        {Object.entries(options).map(([key, label]) => (
-          <option key={key} value={key} className="bg-background">
-            {label}
-          </option>
-        ))}
+        {Array.isArray(options) &&
+          options.length > 0 &&
+          options.map((opt) => (
+            <option key={opt.id} value={opt.key} className="bg-background">
+              {opt.name}
+            </option>
+          ))}
       </select>
       <div className="pointer-events-none absolute inset-y-0 -right-2.5 flex w-9 items-center">
         <IoIosArrowDown className="fill-mediumGreen" />
