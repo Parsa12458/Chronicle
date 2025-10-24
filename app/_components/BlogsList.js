@@ -1,26 +1,65 @@
+"use client";
+
 import BlogItem from "../_components/BlogItem";
 import { getBlogs, getCategories, getUsersById } from "../_lib/data-service";
 import InputField from "../_components/InputField";
 import InputSelect from "../_components/InputSelect";
+import { useEffect, useRef } from "react";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import Spinner from "./Spinner";
 
-async function BlogsList({ filters }) {
-  // Get all categories
-  const categories = await getCategories();
+function BlogsList({ filters }) {
+  const loaderRef = useRef(null);
 
-  // Selected Category ID
-  const selectedCategory = categories?.find(
+  // Fetch all categories
+  const { data: categories } = useQuery({
+    queryKey: ["categories"],
+    queryFn: getCategories,
+  });
+
+  // Selected category object
+  const selectedCategory = categories.find(
     (cat) => cat.key === filters.category
   );
 
-  // Get all blogs
-  const blogs = await getBlogs({
-    ...filters,
-    category: selectedCategory,
+  // Fetch blogs
+  const {
+    data: blogs,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: ["blogs", filters],
+    queryFn: ({ pageParam = 1 }) =>
+      getBlogs({
+        ...filters,
+        category: selectedCategory,
+        page: pageParam,
+        limit: 10,
+      }),
+    getNextPageParam: (lastPage, allPages) =>
+      lastPage.length === 10 ? allPages.length + 1 : undefined,
   });
 
-  // Fetch only the needed users
-  const authorIds = [...new Set(blogs.map((b) => b.authorId))];
-  const authors = await getUsersById(authorIds);
+  const allBlogs = blogs?.pages.flat() || [];
+
+  // Fetch authors
+  const authorIds = [...new Set(allBlogs?.map((b) => b.authorId))];
+  const { data: authors } = useQuery({
+    queryKey: ["authors", authorIds],
+    queryFn: getUsersById,
+  });
+
+  // Scroll observer
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    });
+    if (loaderRef.current) observer.observe(loaderRef.current);
+    return () => observer.disconnect();
+  }, [hasNextPage, isFetchingNextPage]);
 
   return (
     <>
@@ -55,25 +94,28 @@ async function BlogsList({ filters }) {
         />
       </div>
       <div className="flex gap-6 flex-wrap justify-center">
-        {blogs.length === 0 ? (
+        {allBlogs.length === 0 ? (
           <h1 className="text-3xl leading-10 text-center font-semibold mt-4">
             No blog posts found.
             <br />
             Try adjusting your filters or search keywords.
           </h1>
         ) : (
-          blogs?.map((blog) => (
+          allBlogs.map((blog) => (
             <BlogItem
+              key={blog.id}
               blog={blog}
-              category={categories?.find(
+              category={categories.find(
                 (category) => category.id === blog.categoryId
               )}
-              author={authors?.find((author) => author.id === blog.authorId)}
-              key={blog.id}
+              author={authors.find((author) => author.id === blog.authorId)}
             />
           ))
         )}
       </div>
+
+      {isFetchingNextPage && <Spinner isFull={false} />}
+      <div ref={loaderRef} className="h-10" />
     </>
   );
 }

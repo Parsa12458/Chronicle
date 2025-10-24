@@ -13,7 +13,7 @@ export default function Error({ error }) {
   }, [error]);
 
   return (
-    <main className="flex justify-center items-center flex-col gap-4 text-center px-12">
+    <main className="flex justify-center items-center flex-col gap-4 text-center px-12 mb-10">
       <h1 className="text-3xl font-semibold">Something went wrong!</h1>
       <p className="text-lg">{error?.message}</p>
 

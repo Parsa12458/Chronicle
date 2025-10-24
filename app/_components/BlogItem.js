@@ -9,9 +9,9 @@ function BlogItem({ blog, category, author }) {
     <div className="bg-lightGreen w-sm p-5 rounded h-auto relative">
       <Link
         className="flex items-center gap-2.5 mb-4"
-        href={`/users/${author.id}`}
+        href={`/users/${author?.id}`}
       >
-        {author.avatar ? (
+        {author?.avatar ? (
           <Image
             className="w-8 h-8 aspect-square rounded-full object-center object-cover"
             src={author.avatar}
@@ -22,7 +22,7 @@ function BlogItem({ blog, category, author }) {
         ) : (
           <FaUserCircle size={32} className="fill-primary" />
         )}
-        <span className="text-sm font-semibold">{author.fullName}</span>
+        <span className="text-sm font-semibold">{author?.fullName}</span>
       </Link>
 
       <div className="pl-5">
@@ -32,8 +32,8 @@ function BlogItem({ blog, category, author }) {
         >
           {blog.title}
         </Link>
-        <CategoryBadge bgColor={category.bgColor} param={category.key}>
-          {category.name}
+        <CategoryBadge bgColor={category?.bgColor || ""} param={category?.key}>
+          {category?.name}
         </CategoryBadge>
         <p className="text-sm mt-2 font-medium line-clamp-4 mb-7">
           {truncateText(extractTextFromDelta(blog.content), 250)}

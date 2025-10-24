@@ -3,6 +3,7 @@ import { Nunito } from "next/font/google";
 import Header from "./_components/Header";
 import Footer from "./_components/Footer";
 import { Toaster } from "react-hot-toast";
+import Providers from "./providers";
 
 const nunito = Nunito({
   subsets: ["latin"],
@@ -23,17 +24,19 @@ export default function RootLayout({ children }) {
       <body
         className={`${nunito.className} text-darkGreen antialiased bg-background`}
       >
-        <Header />
-        {children}
-        <Footer />
-        <Toaster
-          position="top-center"
-          reverseOrder={true}
-          containerClassName="mt-2"
-          toastOptions={{
-            className: "!px-4 font-medium !max-w-full",
-          }}
-        />
+        <Providers>
+          <Header />
+          {children}
+          <Footer />
+          <Toaster
+            position="top-center"
+            reverseOrder={true}
+            containerClassName="mt-2"
+            toastOptions={{
+              className: "!px-4 font-medium !max-w-full",
+            }}
+          />
+        </Providers>
       </body>
     </html>
   );

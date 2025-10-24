@@ -2,9 +2,15 @@ import toast from "react-hot-toast";
 import { supabase } from "./supabase";
 
 export async function getBlogs(filters = {}) {
-  const { category, sortBy, search } = filters;
+  const { category, sortBy, search, page = 1, limit = 10 } = filters;
 
-  let query = supabase.from("blogs").select("*");
+  const offset = (page - 1) * limit;
+
+  let query = supabase
+    .from("blogs")
+    // TODO: optimize this later. add a excerpt property while inserting blogs that will be created automatically, get the excerpt instead of content
+    .select("id,createdAt,authorId,title,categoryId,content")
+    .range(offset, offset + limit - 1); // Pagination
 
   // Filter by categoryId
   if (category?.id && category?.key !== "all") {
