@@ -8,7 +8,7 @@ function BlogItem({ blog, category, author }) {
   return (
     <div className="bg-lightGreen w-sm p-5 rounded h-auto relative">
       <Link
-        className="flex items-center gap-2.5 mb-4"
+        className="flex items-center gap-2.5 mb-4 w-max"
         href={`/users/${author?.id}`}
       >
         {author?.avatar ? (

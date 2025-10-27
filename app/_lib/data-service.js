@@ -52,8 +52,33 @@ export async function getLastBlogs() {
   return data;
 }
 
+export async function getBlog(id) {
+  const { data, error } = await supabase
+    .from("blogs")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    console.error(error);
+    toast.error(error.message);
+  }
+  return data;
+}
+
 export async function getCategories() {
   const { data, error } = await supabase.from("categories").select("*");
+
+  if (error) console.error(error);
+  return data;
+}
+
+export async function getCategory(id) {
+  const { data, error } = await supabase
+    .from("categories")
+    .select("*")
+    .eq("id", id)
+    .single();
 
   if (error) console.error(error);
   return data;
@@ -66,11 +91,21 @@ export async function getUsersById(idOrIds) {
     query = query.in("id", idOrIds);
   }
   if (typeof idOrIds === "number") {
-    query = query.eq("id", idOrIds);
+    query = query.eq("id", idOrIds).single();
   }
 
   const { data, error } = await query;
 
   if (error) throw error;
+  return data;
+}
+
+export async function getBlogLikes(blogId) {
+  const { data, error } = await supabase
+    .from("blogLikes")
+    .select("*")
+    .eq("blogId", blogId);
+
+  if (error) console.error(error);
   return data;
 }

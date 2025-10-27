@@ -1,4 +1,4 @@
-export function getContrastingTextColor(hex) {
+export function getContrastingTextColor(hex = "") {
   // Remove the hash symbol if present
   hex = hex.replace("#", "");
 

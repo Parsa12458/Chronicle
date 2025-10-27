@@ -4,7 +4,7 @@ import { useOptimistic, startTransition } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
 
 const currentUser = {
-  id: "user_001",
+  id: 1,
   fullName: "Parsa Nikzad",
 };
 
