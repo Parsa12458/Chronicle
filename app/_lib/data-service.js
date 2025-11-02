@@ -138,3 +138,13 @@ export async function getBlogComments(blogId) {
   if (error) console.error(error);
   return data;
 }
+
+export async function getCommentsLikes(commentIds) {
+  const { data, error } = await supabase
+    .from("commentLikes")
+    .select("*")
+    .in("commentId", commentIds);
+
+  if (error) console.error(error);
+  return data;
+}

@@ -10,7 +10,7 @@ import InputTextarea from "./InputTextarea";
 import Image from "next/image";
 import { FaUserCircle } from "react-icons/fa";
 
-function CommentItem({ comment, commentLikes, replies, comments, users }) {
+function CommentItem({ comment, commentsLikes, replies, comments, users }) {
   // Handle showing and hiding replies
   const [repliesExpanded, setRepliesExpanded] = useState(false);
 
@@ -35,7 +35,7 @@ function CommentItem({ comment, commentLikes, replies, comments, users }) {
 
   // Like & Unlike with useOptimistic
   const [optimisticLikes, setOptimisticLikes] = useOptimistic(
-    commentLikes,
+    commentsLikes,
     (state, newLike) => {
       if (newLike.action === "like") {
         return [...state, newLike.payload];
@@ -162,7 +162,7 @@ function CommentItem({ comment, commentLikes, replies, comments, users }) {
                 <CommentItem
                   key={reply.id}
                   comment={reply}
-                  commentLikes={commentLikes.filter(
+                  commentsLikes={commentsLikes.filter(
                     (like) => like.commentId === reply.id
                   )}
                   replies={comments.filter(

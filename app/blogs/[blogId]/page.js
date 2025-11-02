@@ -10,6 +10,7 @@ import {
   getBlogComments,
   getBlogLikes,
   getCategory,
+  getCommentsLikes,
   getUsersById,
 } from "@/app/_lib/data-service";
 import { formatDate } from "@/app/_lib/helper";
@@ -51,14 +52,21 @@ export default async function Page({ params }) {
     queryFn: () => getBlogComments(+blogId),
   });
 
-  // Use prefetched comments to only fetch users needed
+  // Use prefetched comments to only fetch users needed and comments likes
   const comments = queryClient.getQueryData(["blogComments", +blogId]);
   const usersIds = [...new Set(comments?.map((comment) => comment.userId))];
+  const commentsIds = comments.map((comment) => comment.id);
 
   // Prefetch users commented
   await queryClient.prefetchQuery({
     queryKey: ["users", usersIds],
     queryFn: () => getUsersById(usersIds),
+  });
+
+  // Prefetch commentLikes
+  await queryClient.prefetchQuery({
+    queryKey: ["commentLikes", +blogId, commentsIds],
+    queryFn: () => getCommentsLikes(commentsIds),
   });
 
   // Convert quill delta to html

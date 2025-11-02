@@ -2,46 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import CommentItem from "./CommentItem";
-import { getBlogComments } from "../_lib/data-service";
-
-const commentLikes = [
-  {
-    userId: "user_003",
-    commentId: "comment_001",
-  },
-  {
-    userId: "user_001",
-    commentId: "comment_002",
-  },
-  {
-    userId: "user_004",
-    commentId: "comment_003",
-  },
-  {
-    userId: "user_005",
-    commentId: "comment_004",
-  },
-  {
-    userId: "user_002",
-    commentId: "comment_005",
-  },
-  {
-    userId: "user_003",
-    commentId: "comment_006",
-  },
-  {
-    userId: "user_001",
-    commentId: "comment_007",
-  },
-  {
-    userId: "user_004",
-    commentId: "comment_008",
-  },
-  {
-    userId: "user_005",
-    commentId: "comment_008",
-  },
-];
+import { getBlogComments, getCommentsLikes } from "../_lib/data-service";
 
 function CommentSection({ blogId }) {
   // Fetch comments
@@ -59,13 +20,20 @@ function CommentSection({ blogId }) {
     staleTime: 10000,
   });
 
+  // Fetch comments likes
+  const commentsIds = comments.map((comment) => comment.id);
+  const { data: commentsLikes } = useQuery({
+    queryKey: ["commentLikes", +blogId, commentsIds],
+    queryFn: () => getCommentsLikes(commentsIds),
+  });
+
   return (
     <div className="mt-5">
       {comments.map((comment) => (
         <CommentItem
           key={comment.id}
           comment={comment}
-          commentLikes={commentLikes}
+          commentsLikes={commentsLikes}
           replies={comments.filter((c) => c.parentCommentId === comment.id)}
           comments={comments}
           users={users}
