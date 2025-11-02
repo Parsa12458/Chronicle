@@ -1,49 +1,63 @@
 "use client";
 
-import { useOptimistic, startTransition } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
+import { getBlogLikes, likeBlog, unlikeBlog } from "../_lib/data-service";
 
-const currentUser = {
-  id: 1,
-  fullName: "Parsa Nikzad",
-};
+const currentUser = { id: 1 };
 
-function BlogLikeButton({ blogLikes, blogId }) {
-  const [optimisticLikes, setOptimisticLikes] = useOptimistic(
-    blogLikes,
-    (state, newLike) => {
-      if (newLike.action === "like") {
-        return [...state, newLike.payload];
-      } else {
-        return state.filter(
-          (like) =>
-            !(
-              like.blogId === newLike.payload.blogId &&
-              like.userId === newLike.payload.userId
-            )
-        );
-      }
-    }
-  );
-  const isLiked = optimisticLikes.some(
+export default function BlogLikeButton({ blogId }) {
+  const queryClient = useQueryClient();
+
+  const { data: blogLikes = [] } = useQuery({
+    queryKey: ["blogLikes", blogId],
+    queryFn: () => getBlogLikes(blogId),
+    staleTime: 10000,
+  });
+
+  const isLiked = blogLikes.some(
     (like) => like.blogId === blogId && like.userId === currentUser.id
   );
-  const handleToggleLike = () => {
-    const payload = {
-      blogId: blogId,
-      userId: currentUser.id,
-      createdAt: new Date().toISOString(),
-    };
 
-    startTransition(() => {
-      if (isLiked) {
-        setOptimisticLikes({ action: "unlike", payload });
-        // Supabase request
-      } else {
-        setOptimisticLikes({ action: "like", payload });
-        // Supabase request
+  const mutation = useMutation({
+    mutationFn: async (action) => {
+      const payload = { blogId, userId: currentUser.id };
+      if (action === "like") return await likeBlog(payload);
+      await unlikeBlog(payload);
+      return payload;
+    },
+    onMutate: async (action) => {
+      await queryClient.cancelQueries({ queryKey: ["blogLikes", blogId] });
+      const previousLikes =
+        queryClient.getQueryData(["blogLikes", blogId]) || [];
+
+      const payload = { blogId, userId: currentUser.id };
+      const updatedLikes =
+        action === "like"
+          ? [...previousLikes, payload]
+          : previousLikes.filter(
+              (like) =>
+                !(
+                  like.blogId === payload.blogId &&
+                  like.userId === payload.userId
+                )
+            );
+
+      queryClient.setQueryData(["blogLikes", blogId], updatedLikes);
+      return { previousLikes };
+    },
+    onError: (_error, _action, context) => {
+      if (context?.previousLikes) {
+        queryClient.setQueryData(["blogLikes", blogId], context.previousLikes);
       }
-    });
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["blogLikes", blogId] });
+    },
+  });
+
+  const handleToggleLike = () => {
+    mutation.mutate(isLiked ? "unlike" : "like");
   };
 
   return (
@@ -57,10 +71,8 @@ function BlogLikeButton({ blogLikes, blogId }) {
         <FaRegHeart className="fill-primary" size={17} />
       )}
       <span className="text-sm text-primary">
-        {optimisticLikes.filter((l) => l.blogId === blogId).length}
+        {blogLikes.filter((like) => like.blogId === blogId).length}
       </span>
     </button>
   );
 }
-
-export default BlogLikeButton;

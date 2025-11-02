@@ -12,6 +12,11 @@ import {
   getUsersById,
 } from "@/app/_lib/data-service";
 import { formatDate } from "@/app/_lib/helper";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
 import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
@@ -19,6 +24,8 @@ import { FaUserCircle } from "react-icons/fa";
 import { FaArrowRight } from "react-icons/fa6";
 
 export default async function Page({ params }) {
+  const queryClient = new QueryClient();
+
   // Get blog id
   const { blogId } = await params;
 
@@ -31,8 +38,11 @@ export default async function Page({ params }) {
   // Fetch author
   const author = await getUsersById(blog.authorId);
 
-  // Fetch blogs likes
-  const blogLikes = await getBlogLikes(blogId);
+  // Prefetch blogLikes
+  await queryClient.prefetchQuery({
+    queryKey: ["blogLikes", +blogId],
+    queryFn: () => getBlogLikes(+blogId),
+  });
 
   // Convert quill delta to html
   const converter = new QuillDeltaToHtmlConverter(blog.content?.ops, {
@@ -92,7 +102,9 @@ export default async function Page({ params }) {
               : "flex-row items-start gap-4"
           }`}
         >
-          <BlogLikeButton blogLikes={blogLikes || []} blogId={+blogId} />
+          <HydrationBoundary state={dehydrate(queryClient)}>
+            <BlogLikeButton blogId={+blogId} />
+          </HydrationBoundary>
           <ScrollToCommentButton />
           <ShareButton />
         </div>

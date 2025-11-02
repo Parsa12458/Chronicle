@@ -109,3 +109,22 @@ export async function getBlogLikes(blogId) {
   if (error) console.error(error);
   return data;
 }
+
+export async function likeBlog({ blogId, userId }) {
+  const { data, error } = await supabase
+    .from("blogLikes")
+    .insert([{ blogId, userId }])
+    .select();
+
+  if (error) console.error(error);
+  return data?.[0];
+}
+
+export async function unlikeBlog({ blogId, userId }) {
+  const { error } = await supabase
+    .from("blogLikes")
+    .delete()
+    .match({ blogId, userId });
+
+  if (error) console.error(error);
+}
