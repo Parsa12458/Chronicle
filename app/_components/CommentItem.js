@@ -7,31 +7,10 @@ import { startTransition, useOptimistic, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Button from "./Button";
 import InputTextarea from "./InputTextarea";
+import Image from "next/image";
+import { FaUserCircle } from "react-icons/fa";
 
-const users = [
-  {
-    id: "user_001",
-    fullName: "Parsa Nikzad",
-  },
-  {
-    id: "user_002",
-    fullName: "Sara Jafari",
-  },
-  {
-    id: "user_003",
-    fullName: "Ali Rezaei",
-  },
-  {
-    id: "user_004",
-    fullName: "Niloofar Khosravi",
-  },
-  {
-    id: "user_005",
-    fullName: "Reza Mohammadi",
-  },
-];
-
-function CommentItem({ comment, commentLikes, replies, comments }) {
+function CommentItem({ comment, commentLikes, replies, comments, users }) {
   // Handle showing and hiding replies
   const [repliesExpanded, setRepliesExpanded] = useState(false);
 
@@ -98,7 +77,17 @@ function CommentItem({ comment, commentLikes, replies, comments }) {
   return (
     <div className="mt-4">
       <div className="flex items-center gap-2.5">
-        <div className="bg-primary w-8 aspect-square rounded-full"></div>
+        {user?.avatar ? (
+          <Image
+            className="w-8 h-8 aspect-square rounded-full object-center object-cover"
+            src={user.avatar}
+            alt={`${user.fullName} avatar`}
+            width={32}
+            height={32}
+          />
+        ) : (
+          <FaUserCircle size={32} className="fill-primary" />
+        )}
         <span className="text-sm font-semibold">{user.fullName}</span>
         <span className="text-xs text-primary">
           {formatDate(comment.createdAt)}
@@ -180,6 +169,7 @@ function CommentItem({ comment, commentLikes, replies, comments }) {
                     (c) => c.parentCommentId === reply.id
                   )}
                   comments={comments}
+                  users={users}
                 />
               ))}
             </motion.div>

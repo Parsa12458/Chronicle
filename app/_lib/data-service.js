@@ -128,3 +128,13 @@ export async function unlikeBlog({ blogId, userId }) {
 
   if (error) console.error(error);
 }
+
+export async function getBlogComments(blogId) {
+  const { data, error } = await supabase
+    .from("comments")
+    .select("*")
+    .eq("blogId", blogId);
+
+  if (error) console.error(error);
+  return data;
+}

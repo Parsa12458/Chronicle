@@ -7,6 +7,7 @@ import ScrollToCommentButton from "@/app/_components/ScrollToCommentsButton";
 import ShareButton from "@/app/_components/ShareButton";
 import {
   getBlog,
+  getBlogComments,
   getBlogLikes,
   getCategory,
   getUsersById,
@@ -42,6 +43,22 @@ export default async function Page({ params }) {
   await queryClient.prefetchQuery({
     queryKey: ["blogLikes", +blogId],
     queryFn: () => getBlogLikes(+blogId),
+  });
+
+  // Prefetch blog comments
+  await queryClient.prefetchQuery({
+    queryKey: ["blogComments", +blogId],
+    queryFn: () => getBlogComments(+blogId),
+  });
+
+  // Use prefetched comments to only fetch users needed
+  const comments = queryClient.getQueryData(["blogComments", +blogId]);
+  const usersIds = [...new Set(comments?.map((comment) => comment.userId))];
+
+  // Prefetch users commented
+  await queryClient.prefetchQuery({
+    queryKey: ["users", usersIds],
+    queryFn: () => getUsersById(usersIds),
   });
 
   // Convert quill delta to html
@@ -147,7 +164,9 @@ export default async function Page({ params }) {
         </div>
       )}
 
-      <CommentSection />
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <CommentSection blogId={+blogId} />
+      </HydrationBoundary>
     </main>
   );
 }
