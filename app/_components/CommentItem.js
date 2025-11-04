@@ -3,14 +3,26 @@
 import { FaHeart, FaRegHeart, FaReply } from "react-icons/fa6";
 import { formatDate } from "../_lib/helper";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
-import { startTransition, useOptimistic, useState } from "react";
+import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Button from "./Button";
 import InputTextarea from "./InputTextarea";
 import Image from "next/image";
 import { FaUserCircle } from "react-icons/fa";
+import { likeComment, unlikeComment } from "../_lib/data-service";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-function CommentItem({ comment, commentsLikes, replies, comments, users }) {
+function CommentItem({
+  comment,
+  commentsLikes,
+  replies,
+  comments,
+  users,
+  currentUser,
+  blogId,
+}) {
+  const queryClient = useQueryClient();
+
   // Handle showing and hiding replies
   const [repliesExpanded, setRepliesExpanded] = useState(false);
 
@@ -33,43 +45,63 @@ function CommentItem({ comment, commentsLikes, replies, comments, users }) {
     return total + 1 + nestedCount;
   }, 0);
 
-  // Like & Unlike with useOptimistic
-  const [optimisticLikes, setOptimisticLikes] = useOptimistic(
-    commentsLikes,
-    (state, newLike) => {
-      if (newLike.action === "like") {
-        return [...state, newLike.payload];
-      } else {
-        return state.filter(
-          (like) =>
-            !(
-              like.commentId === newLike.payload.commentId &&
-              like.userId === newLike.payload.userId
-            )
+  const commentsIds = comments.map((comment) => comment.id);
+  const isLiked = commentsLikes.some(
+    (like) => like.commentId === comment.id && like.userId === currentUser.id
+  );
+
+  // Like & Unlike optimisticly
+  const mutation = useMutation({
+    mutationFn: async (action) => {
+      const payload = { commentId: comment.id, userId: currentUser.id };
+      if (action === "like") return await likeComment(payload);
+      return await unlikeComment(payload);
+    },
+    onMutate: async (action) => {
+      await queryClient.cancelQueries({
+        queryKey: ["commentLikes", +blogId, commentsIds],
+      });
+
+      const previousLikes =
+        queryClient.getQueryData(["commentLikes", +blogId, commentsIds]) || [];
+
+      const payload = { commentId: comment.id, userId: currentUser.id };
+      const updatedLikes =
+        action === "like"
+          ? [...previousLikes, payload]
+          : previousLikes.filter(
+              (like) =>
+                !(
+                  like.commentId === payload.commentId &&
+                  like.userId === payload.userId
+                )
+            );
+
+      queryClient.setQueryData(
+        ["commentLikes", +blogId, commentsIds],
+        updatedLikes
+      );
+
+      return { previousLikes };
+    },
+    onError: (_error, _action, context) => {
+      if (context?.previousLikes) {
+        queryClient.setQueryData(
+          ["commentLikes", +blogId, commentsIds],
+          context.previousLikes
         );
       }
-    }
-  );
-  const isLiked = optimisticLikes.some(
-    (like) => like.commentId === comment.id && like.userId === user.id
-  );
-  function handleToggleLike() {
-    const payload = {
-      commentId: comment.id,
-      userId: user.id,
-      createdAt: new Date().toISOString(),
-    };
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["commentLikes", +blogId, commentsIds],
+      });
+    },
+  });
 
-    startTransition(() => {
-      if (isLiked) {
-        setOptimisticLikes({ action: "unlike", payload });
-        // Supabase request
-      } else {
-        setOptimisticLikes({ action: "like", payload });
-        // Supabase request
-      }
-    });
-  }
+  const handleToggleLike = () => {
+    mutation.mutate(isLiked ? "unlike" : "like");
+  };
 
   // Handle Replying
   const [isReplyInputVisible, setIsReplyInputVisible] = useState(false);
@@ -115,7 +147,7 @@ function CommentItem({ comment, commentsLikes, replies, comments, users }) {
               <FaRegHeart className="fill-primary" />
             )}
             <span className="text-sm text-primary">
-              {optimisticLikes.filter((l) => l.commentId === comment.id).length}
+              {commentsLikes.filter((l) => l.commentId === comment.id).length}
             </span>
           </button>
 
@@ -170,6 +202,8 @@ function CommentItem({ comment, commentsLikes, replies, comments, users }) {
                   )}
                   comments={comments}
                   users={users}
+                  currentUser={currentUser}
+                  blogId={blogId}
                 />
               ))}
             </motion.div>

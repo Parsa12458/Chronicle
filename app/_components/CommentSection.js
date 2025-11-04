@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import CommentItem from "./CommentItem";
 import { getBlogComments, getCommentsLikes } from "../_lib/data-service";
 
-function CommentSection({ blogId }) {
+function CommentSection({ blogId, currentUser }) {
   // Fetch comments
   const { data: comments = [] } = useQuery({
     queryKey: ["blogComments", blogId],
@@ -25,18 +25,25 @@ function CommentSection({ blogId }) {
   const { data: commentsLikes } = useQuery({
     queryKey: ["commentLikes", +blogId, commentsIds],
     queryFn: () => getCommentsLikes(commentsIds),
+    staleTime: 10000,
   });
+
+  const topLevelComments = comments.filter(
+    (comment) => !comment.parentCommentId
+  );
 
   return (
     <div className="mt-5">
-      {comments.map((comment) => (
+      {topLevelComments.map((comment) => (
         <CommentItem
           key={comment.id}
           comment={comment}
-          commentsLikes={commentsLikes}
+          commentsLikes={commentsLikes || []}
           replies={comments.filter((c) => c.parentCommentId === comment.id)}
           comments={comments}
           users={users}
+          currentUser={currentUser}
+          blogId={blogId}
         />
       ))}
     </div>

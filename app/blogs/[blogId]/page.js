@@ -25,6 +25,8 @@ import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
 import { FaUserCircle } from "react-icons/fa";
 import { FaArrowRight } from "react-icons/fa6";
 
+const currentUser = { id: 1 };
+
 export default async function Page({ params }) {
   const queryClient = new QueryClient();
 
@@ -53,7 +55,7 @@ export default async function Page({ params }) {
   });
 
   // Use prefetched comments to only fetch users needed and comments likes
-  const comments = queryClient.getQueryData(["blogComments", +blogId]);
+  const comments = queryClient.getQueryData(["blogComments", +blogId]) || [];
   const usersIds = [...new Set(comments?.map((comment) => comment.userId))];
   const commentsIds = comments.map((comment) => comment.id);
 
@@ -128,7 +130,7 @@ export default async function Page({ params }) {
           }`}
         >
           <HydrationBoundary state={dehydrate(queryClient)}>
-            <BlogLikeButton blogId={+blogId} />
+            <BlogLikeButton blogId={+blogId} currentUser={currentUser} />
           </HydrationBoundary>
           <ScrollToCommentButton />
           <ShareButton />
@@ -173,7 +175,7 @@ export default async function Page({ params }) {
       )}
 
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <CommentSection blogId={+blogId} />
+        <CommentSection blogId={+blogId} currentUser={currentUser} />
       </HydrationBoundary>
     </main>
   );

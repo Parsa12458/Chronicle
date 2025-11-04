@@ -148,3 +148,22 @@ export async function getCommentsLikes(commentIds) {
   if (error) console.error(error);
   return data;
 }
+
+export async function likeComment({ commentId, userId }) {
+  const { data, error } = await supabase
+    .from("commentLikes")
+    .insert({ commentId, userId })
+    .select();
+
+  if (error) console.error(error);
+  return data?.[0];
+}
+
+export async function unlikeComment({ commentId, userId }) {
+  const { error } = await supabase
+    .from("commentLikes")
+    .delete()
+    .match({ commentId, userId });
+
+  if (error) console.error(error);
+}

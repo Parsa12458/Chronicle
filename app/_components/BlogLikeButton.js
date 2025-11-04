@@ -4,9 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
 import { getBlogLikes, likeBlog, unlikeBlog } from "../_lib/data-service";
 
-const currentUser = { id: 1 };
-
-export default function BlogLikeButton({ blogId }) {
+export default function BlogLikeButton({ blogId, currentUser }) {
   const queryClient = useQueryClient();
 
   const { data: blogLikes = [] } = useQuery({
