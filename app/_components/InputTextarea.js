@@ -1,4 +1,11 @@
-function InputTextarea({ id, placeholder, row = 3, autoFocus, label }) {
+function InputTextarea({
+  id,
+  placeholder,
+  row = 3,
+  autoFocus,
+  label,
+  required = false,
+}) {
   return label ? (
     <div className="flex flex-col text-left">
       <label htmlFor={id} className="mb-0.5 text-xs font-semibold">
@@ -11,6 +18,7 @@ function InputTextarea({ id, placeholder, row = 3, autoFocus, label }) {
         placeholder={placeholder}
         rows={row}
         autoFocus={autoFocus}
+        required={required}
       ></textarea>
     </div>
   ) : (
@@ -21,6 +29,7 @@ function InputTextarea({ id, placeholder, row = 3, autoFocus, label }) {
       placeholder={placeholder}
       rows={row}
       autoFocus={autoFocus}
+      required={required}
     ></textarea>
   );
 }

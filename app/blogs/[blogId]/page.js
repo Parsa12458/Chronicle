@@ -1,8 +1,8 @@
+import AddCommentForm from "@/app/_components/AddCommentForm";
 import BlogLikeButton from "@/app/_components/BlogLikeButton";
 import Button from "@/app/_components/Button";
 import CategoryBadge from "@/app/_components/CategoryBadge";
 import CommentSection from "@/app/_components/CommentSection";
-import InputTextarea from "@/app/_components/InputTextarea";
 import ScrollToCommentButton from "@/app/_components/ScrollToCommentsButton";
 import ShareButton from "@/app/_components/ShareButton";
 import {
@@ -150,10 +150,9 @@ export default async function Page({ params }) {
       {authorized ? (
         <div className="flex flex-col mt-6 w-full">
           <span className="text-sm font-semibold mb-1.5">
-            189 comments have been posted — what’s your take?
+            {comments.length} comments have been posted — what’s your take?
           </span>
-          <InputTextarea row={5} placeholder="Write your comment here..." />
-          <Button additionalClasses="ml-auto mt-3">Submit</Button>
+          <AddCommentForm blogId={blogId} userId={currentUser.id} />
         </div>
       ) : (
         <div className="italic w-full bg-primary py-12 rounded px-16 text-background flex flex-col items-center mt-6 text-center gap-3 mb-10">

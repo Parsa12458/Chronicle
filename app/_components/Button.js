@@ -25,10 +25,11 @@ function Button({
   additionalClasses = "",
   onClick,
   type = "button",
+  disabled,
 }) {
   const styles = `${bgClassMap[bgColor] || "bg-primary"} ${
     textClassMap[textColor] || "text-background"
-  } w-max py-1.5 px-3.5 rounded text-sm font-semibold cursor-pointer hover:opacity-90 transition-all duration-300 ${additionalClasses} ${
+  } w-max flex items-center justify-center gap-2.5 py-1.5 px-3.5 rounded text-sm font-semibold cursor-pointer hover:opacity-90 transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-80 ${additionalClasses} ${
     borderColor ? `border border-${borderColor}` : ""
   }`;
 
@@ -40,7 +41,12 @@ function Button({
     );
 
   return (
-    <button className={styles} onClick={onClick} type={type}>
+    <button
+      className={styles}
+      onClick={onClick}
+      type={type}
+      disabled={disabled}
+    >
       {children}
     </button>
   );
