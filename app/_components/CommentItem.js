@@ -11,6 +11,11 @@ import Image from "next/image";
 import { FaUserCircle } from "react-icons/fa";
 import { likeComment, unlikeComment } from "../_lib/data-service";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { commentSchema } from "../_lib/validators";
+import { addComment } from "../_lib/actions";
+import toast from "react-hot-toast";
 
 function CommentItem({
   comment,
@@ -106,6 +111,33 @@ function CommentItem({
   // Handle Replying
   const [isReplyInputVisible, setIsReplyInputVisible] = useState(false);
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(commentSchema),
+  });
+
+  async function onSubmit(data) {
+    const formData = new FormData();
+    formData.append("blogId", data.blogId);
+    formData.append("userId", data.userId);
+    formData.append("content", data.content);
+    formData.append("parentCommentId", data.parentCommentId);
+
+    const result = await addComment(formData);
+
+    if (result.success) {
+      toast.success("Your comment is succesfully submitted!");
+      setIsReplyInputVisible(false);
+    }
+
+    if (result.errorType === "server") {
+      toast.error(result.error.message || "Something went wrong!");
+    }
+  }
+
   return (
     <div className="mt-4">
       <div className="flex items-center gap-2.5">
@@ -162,14 +194,29 @@ function CommentItem({
           )}
         </div>
         {isReplyInputVisible && (
-          <form className="flex flex-col w-1/2 mt-5">
+          <form
+            className="flex flex-col w-1/2 mt-5"
+            onSubmit={handleSubmit(onSubmit)}
+          >
+            <input type="hidden" {...register("blogId")} value={blogId} />
+            <input
+              type="hidden"
+              {...register("userId")}
+              value={currentUser.id}
+            />
+            <input
+              type="hidden"
+              {...register("parentCommentId")}
+              value={comment.id}
+            />
             <InputTextarea
               placeholder="Write your reply here..."
               row={4}
               autoFocus={true}
+              {...register("content")}
+              error={errors.content?.message}
             />
-            <div className="ml-auto mt-4 space-x-2">
-              <Button>Submit</Button>
+            <div className="ml-auto mt-4 space-x-2 flex">
               <Button
                 bgColor="background"
                 textColor="darkGreen"
@@ -177,6 +224,9 @@ function CommentItem({
                 onClick={() => setIsReplyInputVisible(false)}
               >
                 Cancel
+              </Button>
+              <Button type="submit" disabled={isSubmitting}>
+                Submit
               </Button>
             </div>
           </form>
