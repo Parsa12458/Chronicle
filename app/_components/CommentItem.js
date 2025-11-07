@@ -14,8 +14,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { commentSchema } from "../_lib/validators";
-import { addComment } from "../_lib/actions";
+import { addComment, editComment } from "../_lib/actions";
 import toast from "react-hot-toast";
+import { MdEdit } from "react-icons/md";
 
 function CommentItem({
   comment,
@@ -108,13 +109,15 @@ function CommentItem({
     mutation.mutate(isLiked ? "unlike" : "like");
   };
 
-  // Handle Replying
+  // Handle Replying & Editing
   const [isReplyInputVisible, setIsReplyInputVisible] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    reset,
   } = useForm({
     resolver: zodResolver(commentSchema),
   });
@@ -124,18 +127,50 @@ function CommentItem({
     formData.append("blogId", data.blogId);
     formData.append("userId", data.userId);
     formData.append("content", data.content);
-    formData.append("parentCommentId", data.parentCommentId);
 
-    const result = await addComment(formData);
+    let result;
+    if (!isEditing) {
+      formData.append("parentCommentId", data.parentCommentId);
+      result = await addComment(formData);
+    }
+
+    if (isEditing) {
+      result = await editComment(formData, comment.id);
+    }
 
     if (result.success) {
-      toast.success("Your comment is succesfully submitted!");
+      toast.success(
+        `Your comment is succesfully ${isEditing ? "Updated" : "submitted"}!`
+      );
       setIsReplyInputVisible(false);
+      setIsEditing(false);
+      reset();
     }
 
     if (result.errorType === "server") {
       toast.error(result.error.message || "Something went wrong!");
     }
+  }
+
+  function handleReplyClick() {
+    setIsEditing(false);
+    setIsReplyInputVisible((visible) => !visible);
+    reset({
+      blogId,
+      userId: currentUser.id,
+      content: "",
+      parentCommentId: comment.id,
+    });
+  }
+
+  function handleEditClick() {
+    setIsEditing(true);
+    setIsReplyInputVisible((visible) => !visible);
+    reset({
+      blogId,
+      userId: currentUser.id,
+      content: comment.content,
+    });
   }
 
   return (
@@ -162,11 +197,8 @@ function CommentItem({
         <p className="text-sm">{comment.content}</p>
 
         <div className="flex items-center gap-2.5 mt-3">
-          <button className="cursor-pointer">
-            <FaReply
-              className="fill-primary"
-              onClick={() => setIsReplyInputVisible((visible) => !visible)}
-            />
+          <button className="cursor-pointer" onClick={handleReplyClick}>
+            <FaReply className="fill-primary" />
           </button>
 
           <button
@@ -182,6 +214,14 @@ function CommentItem({
               {commentsLikes.filter((l) => l.commentId === comment.id).length}
             </span>
           </button>
+
+          {currentUser.id === comment.userId && (
+            <div className="flex items-center gap-1">
+              <button className="cursor-pointer" onClick={handleEditClick}>
+                <MdEdit className="fill-primary" />
+              </button>
+            </div>
+          )}
 
           {replies.length !== 0 && (
             <button
@@ -226,7 +266,7 @@ function CommentItem({
                 Cancel
               </Button>
               <Button type="submit" disabled={isSubmitting}>
-                Submit
+                {isEditing ? "Update" : "Submit"}
               </Button>
             </div>
           </form>

@@ -39,3 +39,43 @@ export async function addComment(formData) {
   revalidatePath(`/blogs/${result.data.blogId}`);
   return { success: true };
 }
+
+export async function editComment(formData, id) {
+  const raw = {
+    blogId: formData.get("blogId"),
+    userId: formData.get("userId"),
+    content: formData.get("content"),
+  };
+
+  const editSchema = commentSchema.pick({
+    content: true,
+    blogId: true,
+    userId: true,
+  });
+  const result = validateWithZod(editSchema, raw);
+  if (!result.success) {
+    return {
+      success: false,
+      errorType: "validation",
+      errors: result.errors,
+    };
+  }
+
+  const { data, error } = await supabase
+    .from("comments")
+    .update({ content: result.data.content })
+    .eq("id", id)
+    .select();
+
+  if (error) {
+    console.error(error);
+    return {
+      success: false,
+      errorType: "server",
+      error: { message: error.message },
+    };
+  }
+
+  revalidatePath(`/blogs/${result.data.blogId}`);
+  return { success: true, data };
+}

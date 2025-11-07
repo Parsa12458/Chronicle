@@ -132,7 +132,7 @@ export default async function Page({ params }) {
           <HydrationBoundary state={dehydrate(queryClient)}>
             <BlogLikeButton blogId={+blogId} currentUser={currentUser} />
           </HydrationBoundary>
-          <ScrollToCommentButton />
+          <ScrollToCommentButton commentsLength={comments.length} />
           <ShareButton />
         </div>
       </div>

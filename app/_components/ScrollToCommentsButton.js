@@ -3,7 +3,7 @@
 import { useRef, useEffect } from "react";
 import { FaRegCommentDots } from "react-icons/fa6";
 
-export default function ScrollToCommentButton() {
+export default function ScrollToCommentButton({ commentsLength }) {
   const commentRef = useRef(null);
 
   useEffect(() => {
@@ -18,7 +18,7 @@ export default function ScrollToCommentButton() {
       }}
     >
       <FaRegCommentDots className="fill-primary" size={18} />
-      <span className="text-sm text-primary">9</span>
+      <span className="text-sm text-primary">{commentsLength}</span>
     </button>
   );
 }
