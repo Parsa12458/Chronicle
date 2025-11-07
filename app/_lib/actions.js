@@ -2,23 +2,40 @@
 
 import { revalidatePath } from "next/cache";
 import { supabase } from "./supabase";
+import { validateWithZod } from "./helper";
+import { commentSchema } from "./validators";
 
 export async function addComment(formData) {
-  const blogId = +formData.get("blogId");
-  const userId = +formData.get("userId");
-  const content = formData.get("content");
-  const parentCommentId = +formData.get("parentCommentId") || null;
+  const raw = {
+    blogId: formData.get("blogId"),
+    userId: formData.get("userId"),
+    content: formData.get("content"),
+    parentCommentId: formData.get("parentCommentId"),
+  };
+
+  const result = validateWithZod(commentSchema, raw);
+  if (!result.success) {
+    return {
+      success: false,
+      errorType: "validation",
+      errors: result.errors,
+    };
+  }
 
   const { error } = await supabase
     .from("comments")
-    .insert([{ blogId, userId, content, parentCommentId }])
+    .insert([result.data])
     .select();
 
   if (error) {
     console.error(error);
-    return { success: false, error: { message: error.message } };
+    return {
+      success: false,
+      errorType: "server",
+      error: { message: error.message },
+    };
   }
 
-  revalidatePath(`/blogs/${blogId}`);
+  revalidatePath(`/blogs/${result.data.blogId}`);
   return { success: true };
 }

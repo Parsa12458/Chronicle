@@ -1,40 +1,61 @@
 "use client";
 
 import InputTextarea from "@/app/_components/InputTextarea";
-import SubmitButton from "@/app/_components/SubmitButton";
 import { addComment } from "@/app/_lib/actions";
 import { useRef } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
+import { commentSchema } from "../_lib/validators";
+import Button from "./Button";
 
 function AddCommentForm({ blogId, userId }) {
   const formRef = useRef(null);
 
-  async function handleSubmit(formData) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(commentSchema),
+  });
+
+  async function onSubmit(data) {
+    const formData = new FormData();
+    formData.append("blogId", data.blogId);
+    formData.append("userId", data.userId);
+    formData.append("content", data.content);
+
     const result = await addComment(formData);
 
-    if (!result?.success) {
-      toast.error(result?.error?.message || "Comment could not be submitted!");
-    }
-
-    if (result?.success) {
+    if (result.success) {
       toast.success("Your comment is succesfully submitted!");
       formRef.current.reset();
+    }
+
+    if (result.errorType === "server") {
+      toast.error(result.error.message || "Something went wrong!");
     }
   }
 
   return (
-    <form action={handleSubmit} ref={formRef}>
-      <input type="hidden" name="blogId" value={blogId} />
-      <input type="hidden" name="userId" value={userId} />
+    <form onSubmit={handleSubmit(onSubmit)} ref={formRef}>
+      <input type="hidden" {...register("blogId")} value={blogId} />
+      <input type="hidden" {...register("userId")} value={userId} />
       <InputTextarea
         row={5}
         placeholder="Write your comment here..."
         id="content"
-        required={true}
+        {...register("content")}
+        error={errors.content?.message}
       />
-      <SubmitButton additionalClasses="ml-auto mt-3" type="submit">
+      <Button
+        additionalClasses="ml-auto mt-3"
+        type="submit"
+        disabled={isSubmitting}
+      >
         Submit
-      </SubmitButton>
+      </Button>
     </form>
   );
 }

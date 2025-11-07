@@ -1,3 +1,5 @@
+import z from "zod";
+
 export function getContrastingTextColor(hex = "") {
   // Remove the hash symbol if present
   hex = hex.replace("#", "");
@@ -66,4 +68,19 @@ export function extractTextFromDelta(delta) {
     .map((op) => (typeof op.insert === "string" ? op.insert : ""))
     .join("")
     .trim();
+}
+
+export function validateWithZod(schema, data) {
+  const result = schema.safeParse(data);
+  if (result.success) return { success: true, data: result.data };
+
+  const tree = z.treeifyError(result.error);
+  const errors = Object.fromEntries(
+    Object.entries(tree.children).map(([key, node]) => [
+      key,
+      node.issues?.[0]?.message || "Something went wrong!",
+    ])
+  );
+
+  return { success: false, errors };
 }

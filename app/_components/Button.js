@@ -48,6 +48,7 @@ function Button({
       disabled={disabled}
     >
       {children}
+      {disabled && <div className="button-loader"></div>}
     </button>
   );
 }
