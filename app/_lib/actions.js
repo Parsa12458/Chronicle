@@ -42,16 +42,10 @@ export async function addComment(formData) {
 
 export async function editComment(formData, id) {
   const raw = {
-    blogId: formData.get("blogId"),
-    userId: formData.get("userId"),
     content: formData.get("content"),
   };
 
-  const editSchema = commentSchema.pick({
-    content: true,
-    blogId: true,
-    userId: true,
-  });
+  const editSchema = commentSchema.pick({ content: true });
   const result = validateWithZod(editSchema, raw);
   if (!result.success) {
     return {
@@ -63,7 +57,10 @@ export async function editComment(formData, id) {
 
   const { data, error } = await supabase
     .from("comments")
-    .update({ content: result.data.content })
+    .update({
+      content: result.data.content,
+      updatedAt: new Date().toISOString(),
+    })
     .eq("id", id)
     .select();
 

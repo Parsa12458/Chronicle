@@ -23,7 +23,7 @@ function CommentSection({ blogId, currentUser }) {
   // Fetch comments likes
   const commentsIds = comments.map((comment) => comment.id);
   const { data: commentsLikes } = useQuery({
-    queryKey: ["commentLikes", +blogId, commentsIds],
+    queryKey: ["commentLikes", +blogId],
     queryFn: () => getCommentsLikes(commentsIds),
     staleTime: 10000,
   });
@@ -38,8 +38,7 @@ function CommentSection({ blogId, currentUser }) {
         <CommentItem
           key={comment.id}
           comment={comment}
-          commentsLikes={commentsLikes || []}
-          replies={comments.filter((c) => c.parentCommentId === comment.id)}
+          commentsLikes={commentsLikes}
           comments={comments}
           users={users}
           currentUser={currentUser}

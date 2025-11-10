@@ -76,7 +76,7 @@ export function validateWithZod(schema, data) {
 
   const tree = z.treeifyError(result.error);
   const errors = Object.fromEntries(
-    Object.entries(tree.children).map(([key, node]) => [
+    Object.entries(tree?.children ?? {}).map(([key, node]) => [
       key,
       node.issues?.[0]?.message || "Something went wrong!",
     ])
