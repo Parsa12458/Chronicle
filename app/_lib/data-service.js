@@ -167,3 +167,10 @@ export async function unlikeComment({ commentId, userId }) {
 
   if (error) console.error(error);
 }
+
+export async function deleteComment(id) {
+  const { error } = await supabase.rpc("delete_comment_and_replies", {
+    target_id: id,
+  });
+  if (error) console.error(error);
+}

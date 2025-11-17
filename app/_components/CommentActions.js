@@ -2,13 +2,15 @@
 
 import { FaHeart, FaRegHeart, FaReply } from "react-icons/fa6";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
-import { MdEdit } from "react-icons/md";
+import { MdDelete, MdEdit } from "react-icons/md";
 import CommentForm from "./CommentForm";
 import { useState } from "react";
 import CommentReplies from "./CommentReplies";
 import { useCommentLikes } from "../_hooks/useCommentLikes";
 import { useReplyCount } from "../_hooks/useReplyCount";
 import { AnimatePresence } from "framer-motion";
+import { deleteComment } from "../_lib/data-service";
+import { useDeleteComment } from "../_hooks/useDeleteComment";
 
 function CommentActions({
   comments,
@@ -30,7 +32,7 @@ function CommentActions({
   const totalReplyCount = useReplyCount({ replies, comments });
 
   // Handle Like & Unlike
-  const isLiked = commentsLikes.some(
+  const isLiked = commentsLikes?.some(
     (like) => like.commentId === comment.id && like.userId === currentUser.id
   );
   const likeMutation = useCommentLikes({
@@ -41,6 +43,12 @@ function CommentActions({
   const handleToggleLike = () => {
     likeMutation.mutate(isLiked ? "unlike" : "like");
   };
+
+  // Handle deleting comments optimisticly
+  const deleteMutation = useDeleteComment(blogId);
+  function handleDelete() {
+    deleteMutation.mutate(comment.id);
+  }
 
   // Handle opening and closing comment form for replying
   function handleReplyClick() {
@@ -71,14 +79,17 @@ function CommentActions({
             <FaRegHeart className="fill-primary" />
           )}
           <span className="text-sm text-primary">
-            {commentsLikes.filter((l) => l.commentId === comment.id).length}
+            {commentsLikes?.filter((l) => l.commentId === comment.id).length}
           </span>
         </button>
 
         {currentUser.id === comment.userId && (
           <div className="flex items-center gap-1">
             <button className="cursor-pointer" onClick={handleEditClick}>
-              <MdEdit className="fill-primary" />
+              <MdEdit className="fill-primary" size={18} />
+            </button>
+            <button className="cursor-pointer" onClick={handleDelete}>
+              <MdDelete className="fill-primary" size={18} />
             </button>
           </div>
         )}

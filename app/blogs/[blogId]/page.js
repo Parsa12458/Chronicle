@@ -1,6 +1,4 @@
-import AddCommentForm from "@/app/_components/AddCommentForm";
 import BlogLikeButton from "@/app/_components/BlogLikeButton";
-import Button from "@/app/_components/Button";
 import CategoryBadge from "@/app/_components/CategoryBadge";
 import CommentSection from "@/app/_components/CommentSection";
 import ScrollToCommentButton from "@/app/_components/ScrollToCommentsButton";
@@ -23,9 +21,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
 import { FaUserCircle } from "react-icons/fa";
-import { FaArrowRight } from "react-icons/fa6";
 
 const currentUser = { id: 1 };
+
+// TEMP
+const authorized = true;
 
 export default async function Page({ params }) {
   const queryClient = new QueryClient();
@@ -78,9 +78,6 @@ export default async function Page({ params }) {
   });
   const blogHtml = converter.convert();
 
-  // TEMP
-  const authorized = true;
-
   return (
     <main className="min-h-[calc(100vh-186px)] px-16 pb-12 pt-4">
       <div className="flex items-center gap-3">
@@ -131,8 +128,8 @@ export default async function Page({ params }) {
         >
           <HydrationBoundary state={dehydrate(queryClient)}>
             <BlogLikeButton blogId={+blogId} currentUser={currentUser} />
+            <ScrollToCommentButton blogId={+blogId} />
           </HydrationBoundary>
-          <ScrollToCommentButton commentsLength={comments.length} />
           <ShareButton />
         </div>
       </div>
@@ -147,34 +144,13 @@ export default async function Page({ params }) {
       <h2 className="text-3xl font-bold mt-10" id="comments">
         Comments
       </h2>
-      {authorized ? (
-        <div className="flex flex-col mt-6 w-full">
-          <span className="text-sm font-semibold mb-1.5">
-            {comments.length} comments have been posted — what’s your take?
-          </span>
-          <AddCommentForm blogId={blogId} userId={currentUser.id} />
-        </div>
-      ) : (
-        <div className="italic w-full bg-primary py-12 rounded px-16 text-background flex flex-col items-center mt-6 text-center gap-3 mb-10">
-          <h3 className="text-3xl">Join our community</h3>
-          <p className="text-lg max-w-lg">
-            Read, comment, and connect with authors who care about clarity,
-            depth, and good design.
-          </p>
-          <Button
-            bgColor="background"
-            textColor="darkGreen"
-            additionalClasses="flex items-center gap-2 not-italic mt-4"
-            href="/signup"
-          >
-            <span>Get Started</span>
-            <FaArrowRight className="fill-darkGreen" />
-          </Button>
-        </div>
-      )}
 
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <CommentSection blogId={+blogId} currentUser={currentUser} />
+        <CommentSection
+          blogId={+blogId}
+          currentUser={currentUser}
+          authorized={authorized}
+        />
       </HydrationBoundary>
     </main>
   );

@@ -1,11 +1,19 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import { useRef, useEffect } from "react";
 import { FaRegCommentDots } from "react-icons/fa6";
+import { getBlogComments } from "../_lib/data-service";
 
-export default function ScrollToCommentButton({ commentsLength }) {
+export default function ScrollToCommentButton({ blogId }) {
+  // Fetch comments
+  const { data: comments = [] } = useQuery({
+    queryKey: ["blogComments", blogId],
+    queryFn: () => getBlogComments(blogId),
+    staleTime: 10000,
+  });
+
   const commentRef = useRef(null);
-
   useEffect(() => {
     commentRef.current = document.getElementById("comments");
   }, []);
@@ -18,7 +26,7 @@ export default function ScrollToCommentButton({ commentsLength }) {
       }}
     >
       <FaRegCommentDots className="fill-primary" size={18} />
-      <span className="text-sm text-primary">{commentsLength}</span>
+      <span className="text-sm text-primary">{comments.length}</span>
     </button>
   );
 }
