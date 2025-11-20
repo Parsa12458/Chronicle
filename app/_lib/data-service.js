@@ -174,3 +174,70 @@ export async function deleteComment(id) {
   });
   if (error) console.error(error);
 }
+
+export async function getUserStats(userId) {
+  // 1. Blogs authored by user
+  const { data: blogs, error: blogsError } = await supabase
+    .from("blogs")
+    .select("*")
+    .eq("authorId", userId);
+  if (blogsError) throw blogsError;
+  const blogIds = blogs?.map((b) => b.id) || [];
+
+  // 2. Blogs liked by user
+  const { data: blogsLiked, error: blogsLikedError } = await supabase
+    .from("blogLikes")
+    .select("*")
+    .eq("userId", userId);
+  if (blogsLikedError) throw blogsLikedError;
+
+  // 3. Comments written by user
+  const { data: commentsWritten, error: commentsWrittenError } = await supabase
+    .from("comments")
+    .select("*")
+    .eq("userId", userId);
+  if (commentsWrittenError) throw commentsWrittenError;
+  const commentIds = commentsWritten?.map((c) => c.id) || [];
+
+  // 4. Likes received on blogs
+  let likesOnBlogs = [];
+  if (blogIds.length > 0) {
+    const { data, error } = await supabase
+      .from("blogLikes")
+      .select("*")
+      .in("blogId", blogIds);
+    if (error) throw error;
+    likesOnBlogs = data || [];
+  }
+
+  // 5. Comments received on blogs
+  let commentsOnBlogs = [];
+  if (blogIds.length > 0) {
+    const { data, error } = await supabase
+      .from("comments")
+      .select("*")
+      .in("blogId", blogIds);
+    if (error) throw error;
+    commentsOnBlogs = data || [];
+  }
+
+  // 6. Likes received on comments
+  let likesOnComments = [];
+  if (commentIds.length > 0) {
+    const { data, error } = await supabase
+      .from("commentLikes")
+      .select("*")
+      .in("commentId", commentIds);
+    if (error) throw error;
+    likesOnComments = data || [];
+  }
+
+  return {
+    blogsPublished: blogs,
+    blogsLiked: blogsLiked,
+    commentsWritten: commentsWritten,
+    likesOnBlogs: likesOnBlogs,
+    commentsOnBlogs: commentsOnBlogs,
+    likesOnComments: likesOnComments,
+  };
+}
