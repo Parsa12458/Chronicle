@@ -74,13 +74,11 @@ export function validateWithZod(schema, data) {
   const result = schema.safeParse(data);
   if (result.success) return { success: true, data: result.data };
 
-  const tree = z.treeifyError(result.error);
-  const errors = Object.fromEntries(
-    Object.entries(tree?.children ?? {}).map(([key, node]) => [
-      key,
-      node.issues?.[0]?.message || "Something went wrong!",
-    ])
-  );
+  const errors = {};
+  result.error.issues.forEach((issue) => {
+    const field = issue.path.join(".");
+    errors[field] = { message: issue.message };
+  });
 
   return { success: false, errors };
 }

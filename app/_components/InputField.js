@@ -1,19 +1,24 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, forwardRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-function InputField({
-  id,
-  label,
-  placeholder,
-  type = "text",
-  defaultValue = "",
-  disabled = false,
-  onChange,
-  accept,
-  paramEnabled = false,
-}) {
+const InputField = forwardRef(function InputField(
+  {
+    id,
+    label,
+    placeholder,
+    type = "text",
+    defaultValue = "",
+    disabled = false,
+    onChange,
+    accept,
+    paramEnabled = false,
+    error,
+    ...rest
+  },
+  ref
+) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [value, setValue] = useState(
@@ -52,15 +57,19 @@ function InputField({
       <input
         type={type}
         id={id}
+        name={id}
         placeholder={placeholder}
         className="rounded border border-mediumGreen bg-transparent px-3 py-1.5 text-sm font-medium placeholder:text-mediumGreen/60 autofill:bg-background focus:outline-0"
         disabled={disabled}
         value={value}
         onChange={handleChange}
         accept={accept}
+        ref={ref}
+        {...rest}
       />
+      {error && <span className="text-xs text-red-700 mt-0.5">{error}</span>}
     </div>
   );
-}
+});
 
 export default InputField;

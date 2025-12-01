@@ -14,3 +14,64 @@ export const commentSchema = z.object({
     .nullable()
     .optional(),
 });
+
+export const blogSchema = z.object({
+  authorId: z.coerce.number().int().positive("Invalid user ID"),
+  categoryId: z.coerce.number().int().positive("Invalid category ID"),
+  title: z
+    .string()
+    .min(5, "Title must be at least 5 characters")
+    .max(100, "Title must be less than 100 characters")
+    .trim(),
+  image: z
+    .any()
+    .transform((val) => {
+      // val can be: FileList, File, undefined, null, or empty FileList
+      if (!val) return null;
+      if (val instanceof File) return val;
+      if (val && typeof val === "object" && "length" in val && val.length > 0) {
+        return val[0];
+      }
+      return null;
+    })
+    .pipe(
+      z
+        .instanceof(File, { message: "Please upload a valid image file" })
+        .refine(
+          (file) =>
+            ["image/jpeg", "image/png", "image/webp"].includes(file.type),
+          { message: "Only JPG, PNG or WebP images are allowed" }
+        )
+        .refine((file) => file.size <= 2 * 1024 * 1024, {
+          message: "Image must be smaller than 2MB",
+        })
+        .nullable()
+        .optional()
+    ),
+  content: z.preprocess(
+    (val) => {
+      if (typeof val === "string") {
+        try {
+          return JSON.parse(val);
+        } catch {
+          return val;
+        }
+      }
+      return val;
+    },
+    z
+      .object({
+        ops: z.array(
+          z.object({
+            insert: z.union([z.string(), z.record(z.any())]),
+          })
+        ),
+      })
+      .refine((delta) => {
+        const text = delta.ops
+          .map((op) => (typeof op.insert === "string" ? op.insert : ""))
+          .join("");
+        return text.trim().length >= 50;
+      }, "Content must be at least 50 characters")
+  ),
+});

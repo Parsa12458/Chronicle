@@ -44,18 +44,23 @@ const options = {
   },
 };
 
-const RichTextEditor = forwardRef((_, ref) => {
+const RichTextEditor = forwardRef(({ error, onChange }, ref) => {
   const textEditorRef = useRef(null);
   const quillInstance = useRef(null);
 
   useEffect(() => {
-    import("quill").then((QuillModule) => {
-      const Quill = QuillModule.default;
-      if (textEditorRef.current && !quillInstance.current) {
-        quillInstance.current = new Quill(textEditorRef.current, options);
-      }
+    import("quill").then(({ default: Quill }) => {
+      if (!textEditorRef.current || quillInstance.current) return;
+
+      const quill = new Quill(textEditorRef.current, options);
+      quillInstance.current = quill;
+
+      quill.on("text-change", () => {
+        const delta = quill.getContents();
+        onChange?.(delta);
+      });
     });
-  }, []);
+  }, [onChange]);
 
   useImperativeHandle(ref, () => ({
     getContent: () => quillInstance.current?.getContents() || null,
@@ -65,6 +70,7 @@ const RichTextEditor = forwardRef((_, ref) => {
   return (
     <div>
       <div ref={textEditorRef} />
+      {error && <span className="text-xs text-red-700">{error}</span>}
     </div>
   );
 });

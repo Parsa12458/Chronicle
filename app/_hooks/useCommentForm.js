@@ -16,13 +16,13 @@ export function useCommentForm({ comment, isEditing, setIsReplyInputVisible }) {
 
   async function onSubmit(data) {
     const formData = new FormData();
-    formData.append("blogId", data.blogId);
-    formData.append("userId", data.userId);
-    formData.append("content", data.content);
+    formData.set("blogId", data.blogId);
+    formData.set("userId", data.userId);
+    formData.set("content", data.content);
 
     let result;
     if (!isEditing) {
-      formData.append("parentCommentId", data.parentCommentId);
+      formData.set("parentCommentId", data.parentCommentId);
       result = await addComment(formData);
     }
 

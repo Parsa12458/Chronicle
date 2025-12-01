@@ -11,7 +11,7 @@ import {
   getUsersById,
   getUserStats,
 } from "@/app/_lib/data-service";
-import { calculateDaysUntilNow, timeSince } from "@/app/_lib/helper";
+import { timeSince } from "@/app/_lib/helper";
 import Image from "next/image";
 import { FaUserCircle } from "react-icons/fa";
 
