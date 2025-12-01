@@ -108,7 +108,7 @@ function BlogsList({ filters }) {
               category={categories.find(
                 (category) => category.id === blog.categoryId
               )}
-              author={authors.find((author) => author.id === blog.authorId)}
+              author={authors?.find((author) => author.id === blog.authorId)}
             />
           ))
         )}

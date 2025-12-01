@@ -26,10 +26,10 @@ export async function getBlogs(filters = {}) {
   }
 
   // Sort by selected option
-  if (sortBy === "newest") {
-    query = query.order("createdAt", { ascending: false });
-  } else if (sortBy === "oldest") {
+  if (sortBy === "oldest") {
     query = query.order("createdAt", { ascending: true });
+  } else {
+    query = query.order("createdAt", { ascending: false });
   }
 
   const { data, error } = await query;
@@ -43,7 +43,11 @@ export async function getBlogs(filters = {}) {
 }
 
 export async function getLastBlogs() {
-  const { data, error } = await supabase.from("blogs").select("*").range(0, 5);
+  const { data, error } = await supabase
+    .from("blogs")
+    .select("*")
+    .order("createdAt", { ascending: false })
+    .range(0, 5);
 
   if (error) {
     console.error(error);
@@ -133,7 +137,8 @@ export async function getBlogComments(blogId) {
   const { data, error } = await supabase
     .from("comments")
     .select("*")
-    .eq("blogId", blogId);
+    .eq("blogId", blogId)
+    .order("createdAt", { ascending: false });
 
   if (error) console.error(error);
   return data;
