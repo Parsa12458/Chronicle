@@ -1,8 +1,13 @@
 import Link from "next/link";
 import Logo from "./Logo";
 import Button from "./Button";
+import { auth } from "@/app/_lib/auth";
+import { FaUserCircle } from "react-icons/fa";
+import Image from "next/image";
 
-function Header() {
+async function Header() {
+  const session = await auth();
+
   return (
     <header className="grid grid-cols-3 items-center py-8 px-10">
       <Logo />
@@ -15,7 +20,25 @@ function Header() {
         </Link>
       </nav>
       <div className="justify-self-end">
-        <Button href="/signup">Get Started</Button>
+        {session?.user ? (
+          <div className="flex items-center gap-2.5 cursor-pointer">
+            {session.user.image ? (
+              <Image
+                src={session.user.image}
+                alt={`${session.user.name} avatar`}
+                width={32}
+                height={32}
+                className="rounded-full border-2 border-primary"
+                referrerPolicy="no-referrer"
+              />
+            ) : (
+              <FaUserCircle size={32} className="fill-primary" />
+            )}
+            <span className="font-semibold">{session.user.name}</span>
+          </div>
+        ) : (
+          <Button href="/signup">Get Started</Button>
+        )}
       </div>
     </header>
   );

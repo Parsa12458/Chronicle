@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { supabase } from "./supabase";
 import { validateWithZod } from "./helper";
 import { blogSchema, commentSchema } from "./validators";
+import { signIn } from "@/app/_lib/auth";
 
 export async function addComment(formData) {
   const raw = {
@@ -241,4 +242,8 @@ export async function editBlog(formData, id, previousImagePath) {
     .remove([previousImagePath.split("/").pop()]);
 
   return { success: true };
+}
+
+export async function signInWithGoogle() {
+  await signIn("google", { redirectTo: "/" });
 }

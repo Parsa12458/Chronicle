@@ -2,6 +2,7 @@ import { FcGoogle } from "react-icons/fc";
 import InputField from "../_components/InputField";
 import Button from "../_components/Button";
 import Link from "next/link";
+import { signInWithGoogle } from "../_lib/actions";
 
 export const metadata = {
   title: "Chronicle — Join Chronicle",
@@ -15,10 +16,15 @@ export default function Page() {
     <div className="flex justify-center items-center min-h-[calc(100vh-186px)] py-10">
       <div className="w-96 bg-lightGreen p-9">
         <h2 className="mb-6 text-center text-3xl font-semibold">Signup</h2>
-        <button className="flex w-full items-center justify-center gap-2 rounded border border-mediumGreen py-1.5 font-semibold cursor-pointer">
-          <FcGoogle size={20} />
-          <span>Signup with Google</span>
-        </button>
+        <form action={signInWithGoogle}>
+          <button
+            className="flex w-full items-center justify-center gap-2 rounded border border-mediumGreen py-1.5 font-semibold cursor-pointer"
+            type="submit"
+          >
+            <FcGoogle size={20} />
+            <span>Signup with Google</span>
+          </button>
+        </form>
 
         <form className="mt-7 flex flex-col items-stretch space-y-5">
           <InputField
