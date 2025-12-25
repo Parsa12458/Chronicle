@@ -133,6 +133,14 @@ export async function unlikeBlog({ blogId, userId }) {
   if (error) console.error(error);
 }
 
+export async function deleteBlog(blogId) {
+  const { error } = await supabase.rpc("delete_blog_and_related", {
+    blog_id: blogId,
+  });
+
+  if (error) console.error(error);
+}
+
 export async function getBlogComments(blogId) {
   const { data, error } = await supabase
     .from("comments")
@@ -185,7 +193,8 @@ export async function getUserStats(userId) {
   const { data: blogs, error: blogsError } = await supabase
     .from("blogs")
     .select("*")
-    .eq("authorId", userId);
+    .eq("authorId", userId)
+    .order("createdAt", { ascending: false });
   if (blogsError) throw blogsError;
   const blogIds = blogs?.map((b) => b.id) || [];
 

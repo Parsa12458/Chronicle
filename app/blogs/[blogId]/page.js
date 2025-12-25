@@ -1,3 +1,4 @@
+import BlogEditButton from "@/app/_components/BlogEditButton";
 import BlogLikeButton from "@/app/_components/BlogLikeButton";
 import CategoryBadge from "@/app/_components/CategoryBadge";
 import CommentSection from "@/app/_components/CommentSection";
@@ -152,6 +153,10 @@ export default async function Page({ params }) {
           authorized={authorized}
         />
       </HydrationBoundary>
+
+      {blog.authorId === currentUser.id && (
+        <BlogEditButton userId={blog.authorId} blogId={blog.id} />
+      )}
     </main>
   );
 }

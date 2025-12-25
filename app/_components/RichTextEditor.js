@@ -44,7 +44,7 @@ const options = {
   },
 };
 
-const RichTextEditor = forwardRef(({ error, onChange }, ref) => {
+const RichTextEditor = forwardRef(({ error, onChange, initialValue }, ref) => {
   const textEditorRef = useRef(null);
   const quillInstance = useRef(null);
 
@@ -55,12 +55,16 @@ const RichTextEditor = forwardRef(({ error, onChange }, ref) => {
       const quill = new Quill(textEditorRef.current, options);
       quillInstance.current = quill;
 
+      if (initialValue) {
+        quill.setContents(initialValue);
+      }
+
       quill.on("text-change", () => {
         const delta = quill.getContents();
         onChange?.(delta);
       });
     });
-  }, [onChange]);
+  }, [onChange, initialValue]);
 
   useImperativeHandle(ref, () => ({
     getContent: () => quillInstance.current?.getContents() || null,

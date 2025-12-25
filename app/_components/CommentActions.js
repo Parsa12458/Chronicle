@@ -9,7 +9,6 @@ import CommentReplies from "./CommentReplies";
 import { useCommentLikes } from "../_hooks/useCommentLikes";
 import { useReplyCount } from "../_hooks/useReplyCount";
 import { AnimatePresence } from "framer-motion";
-import { deleteComment } from "../_lib/data-service";
 import { useDeleteComment } from "../_hooks/useDeleteComment";
 
 function CommentActions({

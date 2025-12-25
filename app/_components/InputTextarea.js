@@ -18,7 +18,6 @@ const InputTextarea = forwardRef(function InputTextarea(
         placeholder={placeholder}
         rows={row}
         autoFocus={autoFocus}
-        required={required}
         ref={ref}
         {...rest}
       ></textarea>

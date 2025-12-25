@@ -11,34 +11,48 @@ function InputSelect({
   paramEnabled = false,
   defaultValue = "",
   onChange,
+  value,
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const initialValue = paramEnabled
-    ? searchParams.get(id) || defaultValue
-    : defaultValue;
+  const isControlled = value !== undefined;
+  const [internalSelected, setInternalSelected] = useState(
+    paramEnabled ? searchParams.get(id) || defaultValue : defaultValue
+  );
 
-  const [selected, setSelected] = useState(initialValue);
+  const selected = isControlled ? value : internalSelected;
 
   useEffect(() => {
-    if (paramEnabled) {
+    if (paramEnabled && !isControlled) {
       const paramValue = searchParams.get(id);
-      if (paramValue !== selected) {
-        setSelected(paramValue || defaultValue);
+      if (paramValue !== internalSelected) {
+        setInternalSelected(paramValue || defaultValue);
       }
     }
-  }, [searchParams, paramEnabled, id, defaultValue]);
+  }, [
+    searchParams,
+    paramEnabled,
+    id,
+    defaultValue,
+    internalSelected,
+    isControlled,
+  ]);
 
   const handleChange = (e) => {
-    const value = e.target.value;
-    setSelected(value);
-    onChange?.(value);
+    const newValue = e.target.value;
+
+    if (isControlled) {
+      onChange?.(newValue);
+    } else {
+      setInternalSelected(newValue);
+      onChange?.(newValue);
+    }
 
     if (paramEnabled) {
       const params = new URLSearchParams(searchParams.toString());
-      if (value) {
-        params.set(id, value);
+      if (newValue) {
+        params.set(id, newValue);
       } else {
         params.delete(id);
       }
