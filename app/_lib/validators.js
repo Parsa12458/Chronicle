@@ -2,7 +2,6 @@ import z from "zod";
 
 export const commentSchema = z.object({
   blogId: z.coerce.number().int().positive("Invalid blog ID"),
-  userId: z.coerce.number().int().positive("Invalid user ID"),
   content: z
     .string()
     .min(5, "Comment must be at least 5 characters")
@@ -16,7 +15,6 @@ export const commentSchema = z.object({
 });
 
 export const blogSchema = z.object({
-  authorId: z.coerce.number().int().positive("Invalid user ID"),
   categoryId: z.coerce.number().int().positive("Invalid category ID"),
   title: z
     .string()

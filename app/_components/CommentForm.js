@@ -9,7 +9,6 @@ import InputTextarea from "./InputTextarea";
 function CommentForm({
   comment,
   prefillContent,
-  currentUser,
   setIsReplyInputVisible,
   isEditing,
 }) {
@@ -23,7 +22,6 @@ function CommentForm({
   useEffect(() => {
     reset({
       blogId: comment.blogId,
-      userId: currentUser.id,
       content: prefillContent,
       parentCommentId: isEditing ? comment.parentCommentId : comment.id,
     });
@@ -41,7 +39,6 @@ function CommentForm({
         onSubmit={handleSubmit(onSubmit)}
       >
         <input type="hidden" {...register("blogId")} value={comment.blogId} />
-        <input type="hidden" {...register("userId")} value={currentUser.id} />
         <input
           type="hidden"
           {...register("parentCommentId")}

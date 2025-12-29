@@ -108,7 +108,6 @@ function CommentActions({
           <CommentForm
             comment={comment}
             prefillContent={isEditing ? comment.content : ""}
-            currentUser={currentUser}
             setIsReplyInputVisible={setIsReplyInputVisible}
             isEditing={isEditing}
           />

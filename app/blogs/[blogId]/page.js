@@ -4,6 +4,7 @@ import CategoryBadge from "@/app/_components/CategoryBadge";
 import CommentSection from "@/app/_components/CommentSection";
 import ScrollToCommentButton from "@/app/_components/ScrollToCommentsButton";
 import ShareButton from "@/app/_components/ShareButton";
+import { auth } from "@/app/_lib/auth";
 import {
   getBlog,
   getBlogComments,
@@ -23,13 +24,12 @@ import Link from "next/link";
 import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
 import { FaUserCircle } from "react-icons/fa";
 
-const currentUser = { id: 1 };
-
-// TEMP
-const authorized = true;
-
 export default async function Page({ params }) {
   const queryClient = new QueryClient();
+
+  // Get the active session
+  const session = await auth();
+  const currentUser = session?.user;
 
   // Get blog id
   const { blogId } = await params;
@@ -96,7 +96,7 @@ export default async function Page({ params }) {
       >
         {author?.avatar ? (
           <Image
-            className="w-8 h-8 aspect-square rounded-full object-center object-cover"
+            className="w-8 h-8 aspect-square rounded-full object-center object-cover border-2 border-primary"
             src={author.avatar}
             alt={`${author.fullName} avatar`}
             width={32}
@@ -147,11 +147,7 @@ export default async function Page({ params }) {
       </h2>
 
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <CommentSection
-          blogId={+blogId}
-          currentUser={currentUser}
-          authorized={authorized}
-        />
+        <CommentSection blogId={+blogId} currentUser={currentUser} />
       </HydrationBoundary>
 
       {blog.authorId === currentUser.id && (

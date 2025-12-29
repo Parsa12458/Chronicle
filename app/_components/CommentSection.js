@@ -7,7 +7,7 @@ import Button from "./Button";
 import AddCommentForm from "./AddCommentForm";
 import { FaArrowRight } from "react-icons/fa6";
 
-function CommentSection({ blogId, currentUser, authorized }) {
+function CommentSection({ blogId, currentUser }) {
   // Fetch comments
   const { data: comments = [] } = useQuery({
     queryKey: ["blogComments", blogId],
@@ -35,14 +35,16 @@ function CommentSection({ blogId, currentUser, authorized }) {
     (comment) => !comment.parentCommentId
   );
 
+  console.log(currentUser);
+
   return (
     <>
-      {authorized ? (
+      {currentUser ? (
         <div className="flex flex-col mt-6 w-full">
           <span className="text-sm font-semibold mb-1.5">
             {comments.length} comments have been posted — what’s your take?
           </span>
-          <AddCommentForm blogId={blogId} userId={currentUser.id} />
+          <AddCommentForm blogId={blogId} />
         </div>
       ) : (
         <div className="italic w-full bg-primary py-12 rounded px-16 text-background flex flex-col items-center mt-6 text-center gap-3 mb-10">

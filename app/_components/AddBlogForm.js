@@ -30,7 +30,6 @@ function AddBlogForm({
   } = useForm({
     resolver: zodResolver(blogSchema),
     defaultValues: {
-      authorId: currentUser.id,
       categoryId: isEdit
         ? defaultCategory.id
         : categories?.find((c) => c.key === "all")?.id || "",
@@ -53,7 +52,6 @@ function AddBlogForm({
 
   async function onSubmit(data) {
     const formData = new FormData();
-    formData.set("authorId", data.authorId);
     formData.set("categoryId", data.categoryId);
     formData.set("title", data.title);
     formData.set("image", data.image ?? null);

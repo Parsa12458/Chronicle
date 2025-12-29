@@ -19,7 +19,7 @@ function CommentItem({
       <div className="flex items-center gap-2.5">
         {user?.avatar ? (
           <Image
-            className="w-8 h-8 aspect-square rounded-full object-center object-cover"
+            className="w-8 h-8 aspect-square rounded-full object-center object-cover border-2 border-primary"
             src={user.avatar}
             alt={`${user.fullName} avatar`}
             width={32}

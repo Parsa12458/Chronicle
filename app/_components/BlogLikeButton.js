@@ -2,7 +2,8 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
-import { getBlogLikes, likeBlog, unlikeBlog } from "../_lib/data-service";
+import { getBlogLikes } from "../_lib/data-service";
+import { likeBlog, unlikeBlog } from "../_lib/actions";
 
 export default function BlogLikeButton({ blogId, currentUser }) {
   const queryClient = useQueryClient();
@@ -19,10 +20,8 @@ export default function BlogLikeButton({ blogId, currentUser }) {
 
   const mutation = useMutation({
     mutationFn: async (action) => {
-      const payload = { blogId, userId: currentUser.id };
-      if (action === "like") return await likeBlog(payload);
-      await unlikeBlog(payload);
-      return payload;
+      if (action === "like") return await likeBlog(blogId);
+      if (action === "unlike") return await unlikeBlog(blogId);
     },
     onMutate: async (action) => {
       await queryClient.cancelQueries({ queryKey: ["blogLikes", blogId] });

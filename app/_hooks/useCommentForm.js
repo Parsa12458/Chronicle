@@ -17,7 +17,6 @@ export function useCommentForm({ comment, isEditing, setIsReplyInputVisible }) {
   async function onSubmit(data) {
     const formData = new FormData();
     formData.set("blogId", data.blogId);
-    formData.set("userId", data.userId);
     formData.set("content", data.content);
 
     let result;

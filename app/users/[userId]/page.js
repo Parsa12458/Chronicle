@@ -14,13 +14,16 @@ import {
 import { timeSince } from "@/app/_lib/helper";
 import Image from "next/image";
 import { FaUserCircle } from "react-icons/fa";
-
-const currentUser = { id: 1 };
+import { auth } from "@/app/_lib/auth";
 
 export default async function Page({ params }) {
   const { userId } = await params;
 
-  const user = await getUsersById(+userId);
+  // Get the active session
+  const session = await auth();
+  const currentUser = session?.user;
+
+  const user = await getUsersById(userId);
   const {
     blogsPublished,
     blogsLiked,
@@ -28,7 +31,7 @@ export default async function Page({ params }) {
     likesOnBlogs,
     likesOnComments,
     commentsOnBlogs,
-  } = await getUserStats(+userId);
+  } = await getUserStats(userId);
   const categories = await getCategories();
 
   return (
@@ -36,7 +39,7 @@ export default async function Page({ params }) {
       <div className="flex flex-col items-center text-center">
         {user.avatar ? (
           <Image
-            className="w-32 h-32 aspect-square rounded-full object-center object-cover"
+            className="w-32 h-32 aspect-square rounded-full object-center object-cover border-3 border-primary"
             src={user.avatar}
             alt={`${user.fullName} avatar`}
             width={128}

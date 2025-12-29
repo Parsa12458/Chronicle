@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 import { commentSchema } from "../_lib/validators";
 import Button from "./Button";
 
-function AddCommentForm({ blogId, userId }) {
+function AddCommentForm({ blogId }) {
   const formRef = useRef(null);
 
   const {
@@ -23,7 +23,6 @@ function AddCommentForm({ blogId, userId }) {
   async function onSubmit(data) {
     const formData = new FormData();
     formData.append("blogId", data.blogId);
-    formData.append("userId", data.userId);
     formData.append("content", data.content);
 
     const result = await addComment(formData);
@@ -41,7 +40,6 @@ function AddCommentForm({ blogId, userId }) {
   return (
     <form onSubmit={handleSubmit(onSubmit)} ref={formRef}>
       <input type="hidden" {...register("blogId")} value={blogId} />
-      <input type="hidden" {...register("userId")} value={userId} />
       <InputTextarea
         row={5}
         placeholder="Write your comment here..."

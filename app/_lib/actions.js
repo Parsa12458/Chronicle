@@ -1,15 +1,36 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { supabase } from "./supabase";
 import { validateWithZod } from "./helper";
 import { blogSchema, commentSchema } from "./validators";
-import { signIn } from "@/app/_lib/auth";
+import { auth, signIn } from "@/app/_lib/auth";
+import { createClient } from "@supabase/supabase-js";
+
+export async function getSupabaseClient() {
+  const session = await auth();
+
+  if (!session?.user?.id) throw new Error("Unauthorized!");
+
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    {
+      global: {
+        headers: {
+          Authorization: `Bearer ${session.supabaseAccessToken}`,
+        },
+      },
+    }
+  );
+
+  return { supabase, userId: session.user.id };
+}
 
 export async function addComment(formData) {
+  const { supabase, userId } = await getSupabaseClient();
+
   const raw = {
     blogId: formData.get("blogId"),
-    userId: formData.get("userId"),
     content: formData.get("content"),
     parentCommentId: formData.get("parentCommentId"),
   };
@@ -25,7 +46,7 @@ export async function addComment(formData) {
 
   const { error } = await supabase
     .from("comments")
-    .insert([result.data])
+    .insert([{ ...result.data, userId }])
     .select();
 
   if (error) {
@@ -42,6 +63,30 @@ export async function addComment(formData) {
 }
 
 export async function editComment(formData, id) {
+  const { supabase, userId } = await getSupabaseClient();
+
+  const { data: existing, error: fetchError } = await supabase
+    .from("comments")
+    .select("userId")
+    .eq("id", id)
+    .single();
+
+  if (fetchError || !existing) {
+    return {
+      success: false,
+      errorType: "server",
+      error: { message: "Comment not found!" },
+    };
+  }
+
+  if (existing.userId !== userId) {
+    return {
+      success: false,
+      errorType: "server",
+      error: { message: "You are allowed to only edit your own comments!" },
+    };
+  }
+
   const raw = {
     content: formData.get("content"),
   };
@@ -63,7 +108,8 @@ export async function editComment(formData, id) {
       updatedAt: new Date().toISOString(),
     })
     .eq("id", id)
-    .select();
+    .select()
+    .single();
 
   if (error) {
     console.error(error);
@@ -74,11 +120,13 @@ export async function editComment(formData, id) {
     };
   }
 
-  revalidatePath(`/blogs/${result.data.blogId}`);
+  revalidatePath(`/blogs/${data.blogId}`);
   return { success: true, data };
 }
 
 export async function addBlog(formData) {
+  const { supabase, userId } = await getSupabaseClient();
+
   const contentStr = formData.get("content");
   let contentParsed;
   try {
@@ -95,7 +143,6 @@ export async function addBlog(formData) {
   }
 
   const raw = {
-    authorId: formData.get("authorId"),
     title: formData.get("title"),
     categoryId: formData.get("categoryId"),
     content: contentParsed,
@@ -121,7 +168,7 @@ export async function addBlog(formData) {
     : null;
   const { error, data: blogData } = await supabase
     .from("blogs")
-    .insert([{ ...result.data, image: imagePath }])
+    .insert([{ ...result.data, image: imagePath, authorId: userId }])
     .select()
     .single();
 
@@ -155,6 +202,30 @@ export async function addBlog(formData) {
 }
 
 export async function editBlog(formData, id, previousImagePath) {
+  const { supabase, userId } = await getSupabaseClient();
+
+  const { data: existing, error: fetchError } = await supabase
+    .from("blogs")
+    .select("authorId")
+    .eq("id", id)
+    .single();
+
+  if (fetchError || !existing) {
+    return {
+      success: false,
+      errorType: "server",
+      error: { message: "Blog not found!" },
+    };
+  }
+
+  if (existing.authorId !== userId) {
+    return {
+      success: false,
+      errorType: "server",
+      error: { message: "You are allowed to only edit your own blogs!" },
+    };
+  }
+
   const contentStr = formData.get("content");
   let contentParsed;
   try {
@@ -171,7 +242,6 @@ export async function editBlog(formData, id, previousImagePath) {
   }
 
   const raw = {
-    authorId: formData.get("authorId"),
     title: formData.get("title"),
     categoryId: formData.get("categoryId"),
     content: contentParsed,
@@ -242,6 +312,29 @@ export async function editBlog(formData, id, previousImagePath) {
     .remove([previousImagePath.split("/").pop()]);
 
   return { success: true };
+}
+
+export async function likeBlog(blogId) {
+  const { supabase, userId } = await getSupabaseClient();
+
+  const { data, error } = await supabase
+    .from("blogLikes")
+    .insert([{ blogId, userId }])
+    .select();
+
+  if (error) console.error(error);
+  return data?.[0];
+}
+
+export async function unlikeBlog(blogId) {
+  const { supabase, userId } = await getSupabaseClient();
+
+  const { error } = await supabase
+    .from("blogLikes")
+    .delete()
+    .match({ blogId, userId });
+
+  if (error) console.error(error);
 }
 
 export async function signInWithGoogle() {

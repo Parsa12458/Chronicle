@@ -1,9 +1,12 @@
 import AddBlogForm from "@/app/_components/AddBlogForm";
+import { auth } from "@/app/_lib/auth";
 import { getCategories } from "@/app/_lib/data-service";
 
-const currentUser = { id: 1 };
-
 export default async function Page() {
+  // Get the active session
+  const session = await auth();
+  const currentUser = session?.user;
+
   const categories = await getCategories();
 
   return (
