@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
 import { getBlogLikes } from "../_lib/data-service";
 import { likeBlog, unlikeBlog } from "../_lib/actions";
+import toast from "react-hot-toast";
 
 export default function BlogLikeButton({ blogId, currentUser }) {
   const queryClient = useQueryClient();
@@ -15,7 +16,7 @@ export default function BlogLikeButton({ blogId, currentUser }) {
   });
 
   const isLiked = blogLikes.some(
-    (like) => like.blogId === blogId && like.userId === currentUser.id
+    (like) => like.blogId === blogId && like.userId === currentUser?.id
   );
 
   const mutation = useMutation({
@@ -54,6 +55,9 @@ export default function BlogLikeButton({ blogId, currentUser }) {
   });
 
   const handleToggleLike = () => {
+    if (!currentUser) {
+      return toast.error("Please sign in to like this blog!");
+    }
     mutation.mutate(isLiked ? "unlike" : "like");
   };
 

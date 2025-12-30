@@ -13,7 +13,7 @@ function BlogItem({ blog, category, author }) {
       >
         {author?.avatar ? (
           <Image
-            className="w-8 h-8 aspect-square rounded-full object-center object-cover"
+            className="w-8 h-8 aspect-square rounded-full object-center object-cover border-2 border-primary"
             src={author.avatar}
             alt={`${author.fullName} avatar`}
             width={32}

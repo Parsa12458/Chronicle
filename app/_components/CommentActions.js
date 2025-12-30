@@ -10,6 +10,7 @@ import { useCommentLikes } from "../_hooks/useCommentLikes";
 import { useReplyCount } from "../_hooks/useReplyCount";
 import { AnimatePresence } from "framer-motion";
 import { useDeleteComment } from "../_hooks/useDeleteComment";
+import toast from "react-hot-toast";
 
 function CommentActions({
   comments,
@@ -32,14 +33,17 @@ function CommentActions({
 
   // Handle Like & Unlike
   const isLiked = commentsLikes?.some(
-    (like) => like.commentId === comment.id && like.userId === currentUser.id
+    (like) => like.commentId === comment.id && like.userId === currentUser?.id
   );
   const likeMutation = useCommentLikes({
     commentId: comment.id,
-    userId: currentUser.id,
+    userId: currentUser?.id,
     blogId,
   });
   const handleToggleLike = () => {
+    if (!currentUser) {
+      return toast.error("Please sign in to like this comment!");
+    }
     likeMutation.mutate(isLiked ? "unlike" : "like");
   };
 
@@ -51,6 +55,9 @@ function CommentActions({
 
   // Handle opening and closing comment form for replying
   function handleReplyClick() {
+    if (!currentUser) {
+      return toast.error("Please sign in to write comments!");
+    }
     setIsEditing(false);
     setIsReplyInputVisible((visible) => !visible);
   }
@@ -82,7 +89,7 @@ function CommentActions({
           </span>
         </button>
 
-        {currentUser.id === comment.userId && (
+        {currentUser?.id === comment.userId && (
           <div className="flex items-center gap-1">
             <button className="cursor-pointer" onClick={handleEditClick}>
               <MdEdit className="fill-primary" size={18} />

@@ -83,7 +83,11 @@ export default async function Page({ params }) {
     <main className="min-h-[calc(100vh-186px)] px-16 pb-12 pt-4">
       <div className="flex items-center gap-3">
         <h1 className="text-3xl font-bold">{blog.title}</h1>
-        <CategoryBadge bgColor={category?.bgColor} scale={1.15}>
+        <CategoryBadge
+          bgColor={category?.bgColor}
+          scale={1.15}
+          param={category?.key}
+        >
           {category?.name}
         </CategoryBadge>
         <span className="ml-auto text-sm font-semibold text-primary">
@@ -150,7 +154,7 @@ export default async function Page({ params }) {
         <CommentSection blogId={+blogId} currentUser={currentUser} />
       </HydrationBoundary>
 
-      {blog.authorId === currentUser.id && (
+      {blog.authorId === currentUser?.id && (
         <BlogEditButton userId={blog.authorId} blogId={blog.id} />
       )}
     </main>

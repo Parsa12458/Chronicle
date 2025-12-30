@@ -35,8 +35,6 @@ function CommentSection({ blogId, currentUser }) {
     (comment) => !comment.parentCommentId
   );
 
-  console.log(currentUser);
-
   return (
     <>
       {currentUser ? (

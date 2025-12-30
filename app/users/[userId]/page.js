@@ -121,7 +121,7 @@ export default async function Page({ params }) {
         </div>
       </div>
 
-      {user.id === currentUser.id && <UserEditButton userId={userId} />}
+      {user.id === currentUser?.id && <UserEditButton userId={userId} />}
     </div>
   );
 }

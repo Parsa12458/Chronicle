@@ -2,6 +2,7 @@ import { formatDate } from "../_lib/helper";
 import Image from "next/image";
 import { FaUserCircle } from "react-icons/fa";
 import CommentActions from "./CommentActions";
+import Link from "next/link";
 
 function CommentItem({
   comment,
@@ -17,18 +18,20 @@ function CommentItem({
   return (
     <div className="mt-4">
       <div className="flex items-center gap-2.5">
-        {user?.avatar ? (
-          <Image
-            className="w-8 h-8 aspect-square rounded-full object-center object-cover border-2 border-primary"
-            src={user.avatar}
-            alt={`${user.fullName} avatar`}
-            width={32}
-            height={32}
-          />
-        ) : (
-          <FaUserCircle size={32} className="fill-primary" />
-        )}
-        <span className="text-sm font-semibold">{user.fullName}</span>
+        <Link href={`/users/${user?.id}`} className="flex items-center gap-2.5">
+          {user?.avatar ? (
+            <Image
+              className="w-8 h-8 aspect-square rounded-full object-center object-cover border-2 border-primary"
+              src={user.avatar}
+              alt={`${user.fullName} avatar`}
+              width={32}
+              height={32}
+            />
+          ) : (
+            <FaUserCircle size={32} className="fill-primary" />
+          )}
+          <span className="text-sm font-semibold">{user.fullName}</span>
+        </Link>
         <span className="text-xs text-primary">
           {formatDate(comment.updatedAt ?? comment.createdAt)}
         </span>
