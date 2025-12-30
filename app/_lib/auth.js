@@ -10,9 +10,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   }),
   providers: [Google],
   callbacks: {
-    authorized() {
-      return !!auth;
-    },
     async session({ session, user }) {
       if (session.user) {
         session.user.id = user.id;
@@ -33,7 +30,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
   },
   pages: {
-    signIn: "/login",
+    signIn: "/signup",
   },
   debug: false,
 });
