@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { validateWithZod } from "./helper";
 import { blogSchema, commentSchema } from "./validators";
-import { auth, signIn } from "@/app/_lib/auth";
+import { auth, signIn, signOut } from "@/app/_lib/auth";
 import { createClient } from "@supabase/supabase-js";
 
 export async function getSupabaseClient() {
@@ -339,4 +339,8 @@ export async function unlikeBlog(blogId) {
 
 export async function signInWithGoogle() {
   await signIn("google", { redirectTo: "/" });
+}
+
+export async function signOutUser() {
+  await signOut({ redirectTo: "/" });
 }

@@ -21,7 +21,10 @@ async function Header() {
       </nav>
       <div className="justify-self-end">
         {session?.user ? (
-          <div className="flex items-center gap-2.5 cursor-pointer">
+          <Link
+            className="flex items-center gap-2.5 cursor-pointer"
+            href={`/users/${session.user.id}`}
+          >
             {session.user.image ? (
               <Image
                 src={session.user.image}
@@ -35,7 +38,7 @@ async function Header() {
               <FaUserCircle size={32} className="fill-primary" />
             )}
             <span className="font-semibold">{session.user.name}</span>
-          </div>
+          </Link>
         ) : (
           <Button href="/signup">Get Started</Button>
         )}

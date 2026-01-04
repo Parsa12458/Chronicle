@@ -4,7 +4,9 @@ import { useState, useRef, useEffect } from "react";
 import { MdEdit } from "react-icons/md";
 import { FaUserEdit } from "react-icons/fa";
 import { TiDocumentAdd } from "react-icons/ti";
+import { HiOutlineLogout } from "react-icons/hi";
 import Link from "next/link";
+import { signOutUser } from "../_lib/actions";
 
 export default function UserEditButton({ userId }) {
   const [open, setOpen] = useState(false);
@@ -38,18 +40,25 @@ export default function UserEditButton({ userId }) {
       >
         <Link
           className="text-left bg-mediumGreen text-background rounded py-1.5 px-3 cursor-pointer flex items-center gap-2 transition-all duration-200 hover:bg-[#3f4e42]"
-          href={`/users/${userId}/edit`}
-        >
-          <FaUserEdit size={18} className="fill-background" />
-          <span>Edit Account</span>
-        </Link>
-        <Link
-          className="text-left bg-mediumGreen text-background rounded py-1.5 px-3 cursor-pointer flex items-center gap-2 transition-all duration-200 hover:bg-[#3f4e42]"
           href={`/users/${userId}/add-blog`}
         >
           <TiDocumentAdd size={21} className="fill-background" />
           <span>Add Blog</span>
         </Link>
+        <Link
+          className="text-left bg-mediumGreen text-background rounded py-1.5 px-3 cursor-pointer flex items-center gap-2 transition-all duration-200 hover:bg-[#3f4e42]"
+          href={`/users/${userId}/edit`}
+        >
+          <FaUserEdit size={18} className="fill-background ml-0.5" />
+          <span>Edit Account</span>
+        </Link>
+        <button
+          className="text-left bg-mediumGreen text-background rounded py-1.5 px-3 cursor-pointer flex items-center gap-2 transition-all duration-200 hover:bg-[#3f4e42]"
+          onClick={() => signOutUser()}
+        >
+          <HiOutlineLogout size={21} />
+          <span>Logout</span>
+        </button>
       </div>
     </div>
   );
