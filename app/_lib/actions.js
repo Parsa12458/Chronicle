@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { validateWithZod } from "./helper";
-import { blogSchema, commentSchema } from "./validators";
+import { blogSchema, commentSchema, editProfileSchema } from "./validators";
 import { auth, signIn, signOut } from "@/app/_lib/auth";
 import { createClient } from "@supabase/supabase-js";
 
@@ -343,4 +343,100 @@ export async function signInWithGoogle() {
 
 export async function signOutUser() {
   await signOut({ redirectTo: "/" });
+}
+
+export async function editProfile(formData, id, previousAvatarPath) {
+  const { supabase, userId } = await getSupabaseClient();
+
+  const { data: existing, error: fetchError } = await supabase
+    .from("users")
+    .select("id")
+    .eq("id", id)
+    .single();
+
+  if (fetchError || !existing) {
+    return {
+      success: false,
+      errorType: "server",
+      error: { message: "User not found!" },
+    };
+  }
+
+  if (existing.id !== userId) {
+    return {
+      success: false,
+      errorType: "server",
+      error: { message: "You are allowed to only edit your own profile!" },
+    };
+  }
+
+  const raw = {
+    fullName: formData.get("fullName"),
+    bio: formData.get("bio"),
+    avatar: formData.get("avatar"),
+  };
+
+  const result = validateWithZod(editProfileSchema, raw);
+  if (!result.success) {
+    return {
+      success: false,
+      errorType: "validation",
+      errors: result.errors,
+    };
+  }
+
+  // 1. Update the profile
+  const avatarName = `${Math.random()}-${result.data.avatar?.name}`.replaceAll(
+    "/",
+    ""
+  );
+  const avatarPath = result.data.avatar
+    ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/avatars/${avatarName}`
+    : null;
+  const { error } = await supabase
+    .from("users")
+    .update({
+      fullName: result.data.fullName,
+      bio: result.data.bio,
+      avatar: avatarPath ?? previousAvatarPath,
+    })
+    .eq("id", id);
+
+  if (error) {
+    console.error(error);
+    return {
+      success: false,
+      errorType: "server",
+      error: { message: error.message },
+    };
+  }
+
+  if (!result.data.avatar) return { success: true };
+
+  // If there was a new avatar:
+  // 2. Upload the new image to storage
+  const { error: storageError } = await supabase.storage
+    .from("avatars")
+    .upload(avatarName, result.data.avatar);
+
+  // If there was a error uploading new avatar, set the previous avatar on profile
+  if (storageError) {
+    await supabase
+      .from("users")
+      .update({ avatar: previousAvatarPath })
+      .eq("id", id);
+    console.error(storageError);
+    return {
+      success: false,
+      errorType: "server",
+      error: { message: storageError.message },
+    };
+  }
+
+  // 3. If uploading new avatar was successful, delete the old avatar from bucket
+  await supabase.storage
+    .from("avatars")
+    .remove([previousAvatarPath.split("/").pop()]);
+
+  return { success: true };
 }

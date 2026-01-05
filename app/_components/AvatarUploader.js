@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import AvatarEditor from "react-avatar-editor";
 import InputField from "./InputField";
 
-export default function AvatarUploader({ onImageReady }) {
+export default function AvatarUploader({ onImageReady, onFileChange }) {
   const [selectedImage, setSelectedImage] = useState(null);
   const [scale, setScale] = useState(1.2);
   const editorRef = useRef(null);
@@ -12,7 +12,10 @@ export default function AvatarUploader({ onImageReady }) {
 
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
-    if (file) setSelectedImage(file);
+    if (file) {
+      setSelectedImage(file);
+      onFileChange?.(file);
+    }
   };
 
   useEffect(() => {
@@ -20,7 +23,7 @@ export default function AvatarUploader({ onImageReady }) {
 
     const canvas = editorRef.current.getImageScaledToCanvas();
     canvas.toBlob((blob) => {
-      if (blob) onImageReady(blob);
+      if (blob) onImageReady?.(blob);
     });
   }, [selectedImage, scale]);
 

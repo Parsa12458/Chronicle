@@ -50,7 +50,7 @@ export default function UserEditButton({ userId }) {
           href={`/users/${userId}/edit`}
         >
           <FaUserEdit size={18} className="fill-background ml-0.5" />
-          <span>Edit Account</span>
+          <span>Edit Profile</span>
         </Link>
         <button
           className="text-left bg-mediumGreen text-background rounded py-1.5 px-3 cursor-pointer flex items-center gap-2 transition-all duration-200 hover:bg-[#3f4e42]"

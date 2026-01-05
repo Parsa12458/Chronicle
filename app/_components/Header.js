@@ -4,9 +4,14 @@ import Button from "./Button";
 import { auth } from "@/app/_lib/auth";
 import { FaUserCircle } from "react-icons/fa";
 import Image from "next/image";
+import { getUsersById } from "../_lib/data-service";
 
 async function Header() {
   const session = await auth();
+  const currentUser = await getUsersById(session?.user?.id);
+
+  const avatarUrl = currentUser?.avatar || session?.user?.image;
+  const displayName = currentUser?.fullName || session?.user?.name;
 
   return (
     <header className="grid grid-cols-3 items-center py-8 px-10">
@@ -25,19 +30,20 @@ async function Header() {
             className="flex items-center gap-2.5 cursor-pointer"
             href={`/users/${session.user.id}`}
           >
-            {session.user.image ? (
+            {avatarUrl ? (
               <Image
-                src={session.user.image}
-                alt={`${session.user.name} avatar`}
+                src={avatarUrl}
+                alt={`${displayName} avatar`}
                 width={32}
                 height={32}
                 className="rounded-full border-2 border-primary"
                 referrerPolicy="no-referrer"
+                priority
               />
             ) : (
               <FaUserCircle size={32} className="fill-primary" />
             )}
-            <span className="font-semibold">{session.user.name}</span>
+            <span className="font-semibold">{displayName}</span>
           </Link>
         ) : (
           <Button href="/signup">Get Started</Button>

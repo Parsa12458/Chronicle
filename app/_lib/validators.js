@@ -73,3 +73,21 @@ export const blogSchema = z.object({
       }, "Content must be at least 50 characters")
   ),
 });
+
+export const editProfileSchema = z.object({
+  fullName: z
+    .string({ required_error: "Full name is required" })
+    .min(3, "Full name must be at least 3 characters")
+    .max(100, "Full name must be at most 100 characters"),
+  bio: z.string().max(500, "Bio must be at most 500 characters").optional(),
+  avatar: z
+    .instanceof(Blob)
+    .optional() // Allows null or undefined (will treat undefined as null-ish)
+    .nullable() // Explicitly allows null
+    .refine((blob) => blob === null || blob.size <= 2 * 1024 * 1024, {
+      message: "Avatar image must be smaller than 2MB",
+    })
+    .refine((blob) => blob === null || blob.type.startsWith("image/"), {
+      message: "Avatar must be a valid image file",
+    }),
+});
