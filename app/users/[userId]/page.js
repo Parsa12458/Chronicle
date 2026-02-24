@@ -23,7 +23,7 @@ export default async function Page({ params }) {
   const session = await auth();
   const currentUser = session?.user;
 
-  const user = await getUsersById(userId);
+  const user = (await getUsersById(userId)) || {};
   const {
     blogsPublished,
     blogsLiked,
@@ -108,7 +108,7 @@ export default async function Page({ params }) {
                 blog={blog}
                 author={user}
                 category={categories.find(
-                  (category) => category.id === blog.categoryId
+                  (category) => category.id === blog.categoryId,
                 )}
                 key={blog.id}
               />

@@ -32,7 +32,7 @@ function CommentSection({ blogId, currentUser }) {
   });
 
   const topLevelComments = comments.filter(
-    (comment) => !comment.parentCommentId
+    (comment) => !comment.parentCommentId,
   );
 
   return (
@@ -55,7 +55,7 @@ function CommentSection({ blogId, currentUser }) {
             bgColor="background"
             textColor="darkGreen"
             additionalClasses="flex items-center gap-2 not-italic mt-4"
-            href="/signup"
+            href="/login"
           >
             <span>Get Started</span>
             <FaArrowRight className="fill-darkGreen" />

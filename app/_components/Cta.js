@@ -35,7 +35,7 @@ async function Cta() {
             bgColor="background"
             textColor="darkGreen"
             additionalClasses="flex items-center gap-2 not-italic mt-5"
-            href={currentUser ? `/users/${currentUser.id}/add-blog` : "/signup"}
+            href={currentUser ? `/users/${currentUser.id}/add-blog` : "/login"}
           >
             <span>{currentUser ? "Start Writing" : "Get Started"}</span>
             <FaArrowRight className="fill-darkGreen" />

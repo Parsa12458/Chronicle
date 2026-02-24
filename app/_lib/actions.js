@@ -20,7 +20,7 @@ export async function getSupabaseClient() {
           Authorization: `Bearer ${session.supabaseAccessToken}`,
         },
       },
-    }
+    },
   );
 
   return { supabase, userId: session.user.id };
@@ -161,7 +161,7 @@ export async function addBlog(formData) {
   // 1. Create blog
   const imageName = `${Math.random()}-${result.data.image?.name}`.replaceAll(
     "/",
-    ""
+    "",
   );
   const imagePath = result.data.image
     ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/blogImages/${imageName}`
@@ -260,7 +260,7 @@ export async function editBlog(formData, id, previousImagePath) {
   // 1. Update the blog
   const imageName = `${Math.random()}-${result.data.image?.name}`.replaceAll(
     "/",
-    ""
+    "",
   );
   const imagePath = result.data.image
     ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/blogImages/${imageName}`
@@ -388,7 +388,7 @@ export async function editProfile(formData, id, previousAvatarPath) {
   // 1. Update the profile
   const avatarName = `${Math.random()}-${result.data.avatar?.name}`.replaceAll(
     "/",
-    ""
+    "",
   );
   const avatarPath = result.data.avatar
     ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/avatars/${avatarName}`

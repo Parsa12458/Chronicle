@@ -46,7 +46,7 @@ async function Header() {
             <span className="font-semibold">{displayName}</span>
           </Link>
         ) : (
-          <Button href="/signup">Get Started</Button>
+          <Button href="/login">Get Started</Button>
         )}
       </div>
     </header>

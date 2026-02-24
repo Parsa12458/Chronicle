@@ -38,13 +38,13 @@ export const blogSchema = z.object({
         .refine(
           (file) =>
             ["image/jpeg", "image/png", "image/webp"].includes(file.type),
-          { message: "Only JPG, PNG or WebP images are allowed" }
+          { message: "Only JPG, PNG or WebP images are allowed" },
         )
         .refine((file) => file.size <= 2 * 1024 * 1024, {
           message: "Image must be smaller than 2MB",
         })
         .nullable()
-        .optional()
+        .optional(),
     ),
   content: z.preprocess(
     (val) => {
@@ -62,7 +62,7 @@ export const blogSchema = z.object({
         ops: z.array(
           z.object({
             insert: z.union([z.string(), z.record(z.any())]),
-          })
+          }),
         ),
       })
       .refine((delta) => {
@@ -70,7 +70,7 @@ export const blogSchema = z.object({
           .map((op) => (typeof op.insert === "string" ? op.insert : ""))
           .join("");
         return text.trim().length >= 50;
-      }, "Content must be at least 50 characters")
+      }, "Content must be at least 50 characters"),
   ),
 });
 
