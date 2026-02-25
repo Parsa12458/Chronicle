@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { likeComment, unlikeComment } from "../_lib/data-service";
+import { likeComment, unlikeComment } from "../_lib/actions";
 
 export function useCommentLikes({ commentId, userId, blogId }) {
   const queryClient = useQueryClient();
@@ -7,9 +7,8 @@ export function useCommentLikes({ commentId, userId, blogId }) {
 
   const likeMutation = useMutation({
     mutationFn: async (action) => {
-      const payload = { commentId, userId };
-      if (action === "like") return await likeComment(payload);
-      return await unlikeComment(payload);
+      if (action === "like") return await likeComment(commentId);
+      return await unlikeComment(commentId);
     },
     onMutate: async (action) => {
       await queryClient.cancelQueries({
@@ -27,7 +26,7 @@ export function useCommentLikes({ commentId, userId, blogId }) {
                 !(
                   like.commentId === payload.commentId &&
                   like.userId === payload.userId
-                )
+                ),
             );
 
       queryClient.setQueryData(queryKey, updatedLikes);

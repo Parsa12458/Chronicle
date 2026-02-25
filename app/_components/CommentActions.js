@@ -33,7 +33,7 @@ function CommentActions({
 
   // Handle Like & Unlike
   const isLiked = commentsLikes?.some(
-    (like) => like.commentId === comment.id && like.userId === currentUser?.id
+    (like) => like.commentId === comment.id && like.userId === currentUser?.id,
   );
   const likeMutation = useCommentLikes({
     commentId: comment.id,

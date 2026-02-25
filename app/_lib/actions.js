@@ -337,6 +337,40 @@ export async function unlikeBlog(blogId) {
   if (error) console.error(error);
 }
 
+export async function likeComment(commentId) {
+  const { supabase, userId } = await getSupabaseClient();
+
+  if (!userId) throw new Error("Unauthorized");
+
+  const { data, error } = await supabase
+    .from("commentLikes")
+    .insert([{ commentId, userId }])
+    .select();
+
+  if (error) {
+    console.error(error);
+    throw new Error("Failed to like comment");
+  }
+
+  return data?.[0];
+}
+
+export async function unlikeComment(commentId) {
+  const { supabase, userId } = await getSupabaseClient();
+
+  if (!userId) throw new Error("Unauthorized");
+
+  const { error } = await supabase
+    .from("commentLikes")
+    .delete()
+    .match({ commentId, userId });
+
+  if (error) {
+    console.error(error);
+    throw new Error("Failed to unlike comment");
+  }
+}
+
 export async function signInWithGoogle() {
   await signIn("google", { redirectTo: "/" });
 }
