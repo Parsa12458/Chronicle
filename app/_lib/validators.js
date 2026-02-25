@@ -46,32 +46,12 @@ export const blogSchema = z.object({
         .nullable()
         .optional(),
     ),
-  content: z.preprocess(
-    (val) => {
-      if (typeof val === "string") {
-        try {
-          return JSON.parse(val);
-        } catch {
-          return val;
-        }
-      }
-      return val;
-    },
-    z
-      .object({
-        ops: z.array(
-          z.object({
-            insert: z.union([z.string(), z.record(z.any())]),
-          }),
-        ),
-      })
-      .refine((delta) => {
-        const text = delta.ops
-          .map((op) => (typeof op.insert === "string" ? op.insert : ""))
-          .join("");
-        return text.trim().length >= 50;
-      }, "Content must be at least 50 characters"),
-  ),
+  content: z.refine((delta) => {
+    const text = delta.ops
+      .map((op) => (typeof op.insert === "string" ? op.insert : ""))
+      .join("");
+    return text.trim().length >= 50;
+  }, "Content must be at least 50 characters"),
 });
 
 export const editProfileSchema = z.object({

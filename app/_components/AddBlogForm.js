@@ -42,12 +42,11 @@ function AddBlogForm({
   });
 
   const [category, setCategory] = useState(
-    isEdit ? defaultCategory.key : "all"
+    isEdit ? defaultCategory.key : "all",
   );
 
   function onEditorChange(delta) {
-    const jsonString = JSON.stringify(delta);
-    setValue("content", jsonString, { shouldValidate: true });
+    setValue("content", delta, { shouldValidate: true });
   }
 
   async function onSubmit(data) {
@@ -134,8 +133,8 @@ function AddBlogForm({
             ? "Updating..."
             : "Publishing..."
           : isEdit
-          ? "Update Blog"
-          : "Publish Blog"}
+            ? "Update Blog"
+            : "Publish Blog"}
       </Button>
     </form>
   );
