@@ -29,6 +29,8 @@ export async function getSupabaseClient() {
 export async function addComment(formData) {
   const { supabase, userId } = await getSupabaseClient();
 
+  if (!userId) throw new Error("Unauthorized");
+
   const raw = {
     blogId: formData.get("blogId"),
     content: formData.get("content"),
@@ -64,6 +66,8 @@ export async function addComment(formData) {
 
 export async function editComment(formData, id) {
   const { supabase, userId } = await getSupabaseClient();
+
+  if (!userId) throw new Error("Unauthorized");
 
   const { data: existing, error: fetchError } = await supabase
     .from("comments")
@@ -126,6 +130,8 @@ export async function editComment(formData, id) {
 
 export async function addBlog(formData) {
   const { supabase, userId } = await getSupabaseClient();
+
+  if (!userId) throw new Error("Unauthorized");
 
   const contentStr = formData.get("content");
   let contentParsed;
@@ -203,6 +209,8 @@ export async function addBlog(formData) {
 
 export async function editBlog(formData, id, previousImagePath) {
   const { supabase, userId } = await getSupabaseClient();
+
+  if (!userId) throw new Error("Unauthorized");
 
   const { data: existing, error: fetchError } = await supabase
     .from("blogs")
@@ -317,6 +325,8 @@ export async function editBlog(formData, id, previousImagePath) {
 export async function likeBlog(blogId) {
   const { supabase, userId } = await getSupabaseClient();
 
+  if (!userId) throw new Error("Unauthorized");
+
   const { data, error } = await supabase
     .from("blogLikes")
     .insert([{ blogId, userId }])
@@ -328,6 +338,8 @@ export async function likeBlog(blogId) {
 
 export async function unlikeBlog(blogId) {
   const { supabase, userId } = await getSupabaseClient();
+
+  if (!userId) throw new Error("Unauthorized");
 
   const { error } = await supabase
     .from("blogLikes")
@@ -381,6 +393,8 @@ export async function signOutUser() {
 
 export async function editProfile(formData, id, previousAvatarPath) {
   const { supabase, userId } = await getSupabaseClient();
+
+  if (!userId) throw new Error("Unauthorized");
 
   const { data: existing, error: fetchError } = await supabase
     .from("users")
