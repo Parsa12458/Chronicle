@@ -22,7 +22,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${nunito.className} text-darkGreen antialiased bg-background`}
+        className={`${nunito.className} text-darkGreen antialiased bg-background min-h-screen flex flex-col flex-1`}
       >
         <Providers>
           <Header />

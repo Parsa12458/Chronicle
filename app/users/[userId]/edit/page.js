@@ -8,11 +8,11 @@ export default async function Page() {
   const currentUser = await getUsersById(session?.user?.id);
 
   return (
-    <section className="px-16 min-h-[calc(100vh-186px)] max-w-[1440px] mx-auto mt-4 mb-16">
+    <main className="px-16 mt-4 mb-16 flex-1 w-full max-w-[1440px] mx-auto">
       <h1 className="text-4xl font-medium mb-6">Edit Profile</h1>
       <EditProfileForm
         currentUser={{ ...currentUser, email: session?.user?.email }}
       />
-    </section>
+    </main>
   );
 }

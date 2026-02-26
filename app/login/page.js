@@ -10,7 +10,7 @@ export const metadata = {
 
 export default function Page() {
   return (
-    <div className="flex justify-center items-center min-h-[calc(100vh-186px)] py-10">
+    <div className="flex justify-center items-center mb-10 flex-1">
       <div className="w-96 bg-lightGreen p-9 border-darkGreen border rounded-md">
         <h2 className="mb-6 text-center text-3xl font-semibold">Login</h2>
         <form action={signInWithGoogle}>

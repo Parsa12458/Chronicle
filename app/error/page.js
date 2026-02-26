@@ -16,11 +16,11 @@ export default function Page() {
   const error = search.get("error") || "Default";
 
   return (
-    <main className="flex justify-center items-center flex-col gap-4 text-center px-12 mb-10 min-h-S">
+    <div className="flex justify-center items-center flex-col gap-4 text-center px-12 mb-10 flex-1">
       <h1 className="text-3xl font-semibold">Oops! Authentication Failed</h1>
       <p className="text-lg">{errorMessages[error] || errorMessages.Default}</p>
 
       <Button onClick={() => window.location.reload()}>Retry</Button>
-    </main>
+    </div>
   );
 }

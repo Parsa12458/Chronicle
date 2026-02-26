@@ -35,7 +35,7 @@ export default async function Page({ params }) {
   const categories = await getCategories();
 
   return (
-    <div className="min-h-[calc(100vh-186px)] pt-6 pb-16 px-16 max-w-[1440px] mx-auto relative">
+    <main className="pt-6 pb-16 px-16 relative flex-1 w-full max-w-[1440px] mx-auto">
       <div className="flex flex-col items-center text-center">
         {user.avatar ? (
           <Image
@@ -122,6 +122,6 @@ export default async function Page({ params }) {
       </div>
 
       {user.id === currentUser?.id && <UserEditButton userId={userId} />}
-    </div>
+    </main>
   );
 }

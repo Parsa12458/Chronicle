@@ -33,7 +33,7 @@ export default async function Page({ searchParams }) {
   // Use prefetched categories to pass the selected category object to getBlogs for filtering
   const categories = queryClient.getQueryData(["categories"]);
   const selectedCategory = categories.find(
-    (cat) => cat.key === filters.category
+    (cat) => cat.key === filters.category,
   );
 
   // Prefetch blogs with infinite query
@@ -60,7 +60,7 @@ export default async function Page({ searchParams }) {
   });
 
   return (
-    <section className="px-16 min-h-[calc(100vh-186px)] max-w-[1440px] mx-auto mt-4 mb-16">
+    <main className="px-16 mt-4 mb-16 flex-1 w-full max-w-[1440px] mx-auto">
       <h1 className="text-4xl font-medium mb-6">All Blogs</h1>
 
       <HydrationBoundary state={dehydrate(queryClient)}>
@@ -70,6 +70,6 @@ export default async function Page({ searchParams }) {
           </Suspense>
         </ErrorBoundary>
       </HydrationBoundary>
-    </section>
+    </main>
   );
 }

@@ -80,7 +80,7 @@ export default async function Page({ params }) {
   const blogHtml = converter.convert();
 
   return (
-    <main className="min-h-[calc(100vh-186px)] px-16 pb-12 pt-4">
+    <main className="px-16 pb-12 pt-4 flex-1">
       <div className="flex items-center gap-3">
         <h1 className="text-3xl font-bold">{blog.title}</h1>
         <CategoryBadge

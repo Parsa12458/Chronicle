@@ -10,9 +10,9 @@ export default async function Page() {
   const categories = await getCategories();
 
   return (
-    <section className="px-16 min-h-[calc(100vh-186px)] max-w-[1440px] mx-auto mt-4 mb-16">
+    <main className="px-16 mt-4 mb-16 flex-1">
       <h1 className="text-4xl font-medium mb-6">Add Blog</h1>
       <AddBlogForm categories={categories} currentUser={currentUser} />
-    </section>
+    </main>
   );
 }

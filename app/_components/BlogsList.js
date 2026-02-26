@@ -19,7 +19,7 @@ function BlogsList({ filters }) {
 
   // Selected category object
   const selectedCategory = categories.find(
-    (cat) => cat.key === filters.category
+    (cat) => cat.key === filters.category,
   );
 
   // Fetch blogs
@@ -106,7 +106,7 @@ function BlogsList({ filters }) {
               key={blog.id}
               blog={blog}
               category={categories.find(
-                (category) => category.id === blog.categoryId
+                (category) => category.id === blog.categoryId,
               )}
               author={authors?.find((author) => author.id === blog.authorId)}
             />

@@ -19,7 +19,7 @@ export default async function Page({ params }) {
   const category = await getCategory(blog.categoryId);
 
   return (
-    <section className="px-16 min-h-[calc(100vh-186px)] max-w-[1440px] mx-auto mt-4 mb-16">
+    <main className="px-16 mt-4 mb-16 flex-1">
       <h1 className="text-4xl font-medium mb-6">Edit blog: {blog.title}</h1>
       <AddBlogForm
         categories={categories}
@@ -28,6 +28,6 @@ export default async function Page({ params }) {
         defaultCategory={category}
         isEdit={true}
       />
-    </section>
+    </main>
   );
 }
