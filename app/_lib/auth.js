@@ -34,13 +34,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         process.env.NEXT_PUBLIC_SUPABASE_URL,
         process.env.SUPABASE_SERVICE_ROLE_KEY,
       );
-      const { error } = await supabase.from("users").upsert({
-        id: user.id,
-        fullName: user.name,
-        avatar: user.image,
-        bio: "",
-        createdAt: new Date().toISOString(),
-      });
+      const { error } = await supabase.from("users").upsert(
+        {
+          id: user.id,
+          fullName: user.name,
+          avatar: user.image,
+          bio: "",
+          createdAt: new Date().toISOString(),
+        },
+        { onConflict: ["id"], ignoreDuplicates: true },
+      );
 
       if (error) {
         console.error(error);
@@ -50,7 +53,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
   },
   pages: {
-    signIn: "/signup",
+    signIn: "/login",
     error: "/error",
   },
   debug: false,
