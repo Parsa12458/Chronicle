@@ -16,6 +16,48 @@ import Image from "next/image";
 import { FaUserCircle } from "react-icons/fa";
 import { auth } from "@/app/_lib/auth";
 
+export async function generateMetadata({ params }) {
+  const { userId } = params;
+
+  try {
+    const user = await getUsersById(userId);
+    const { blogsPublished, commentsWritten } = await getUserStats(userId);
+
+    if (!user) {
+      return {
+        title: "Chronicle — User Not Found",
+        description: "This user profile does not exist.",
+      };
+    }
+
+    const description =
+      user.bio ||
+      `${user.fullName} has published ${blogsPublished.length} blogs and written ${commentsWritten.length} comments on Chronicle.`;
+
+    return {
+      title: `Chronicle — ${user.fullName}`,
+      description,
+      keywords: [
+        "Chronicle author",
+        "blog writer",
+        user.fullName,
+        `${blogsPublished.length} blogs`,
+      ],
+      authors: [{ name: user.fullName }],
+      openGraph: {
+        title: `${user.fullName} on Chronicle`,
+        description,
+        images: user.avatar ? [user.avatar] : [],
+      },
+    };
+  } catch {
+    return {
+      title: "Chronicle — Profile",
+      description: "Explore author profiles on Chronicle.",
+    };
+  }
+}
+
 export default async function Page({ params }) {
   const { userId } = await params;
 

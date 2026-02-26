@@ -13,7 +13,11 @@ import {
   getCommentsLikes,
   getUsersById,
 } from "@/app/_lib/data-service";
-import { formatDate } from "@/app/_lib/helper";
+import {
+  extractTextFromDelta,
+  formatDate,
+  truncateText,
+} from "@/app/_lib/helper";
 import {
   dehydrate,
   HydrationBoundary,
@@ -23,6 +27,42 @@ import Image from "next/image";
 import Link from "next/link";
 import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
 import { FaUserCircle } from "react-icons/fa";
+
+export async function generateMetadata({ params }) {
+  const { blogId } = params;
+
+  try {
+    const blog = await getBlog(blogId);
+    const category = await getCategory(blog.categoryId);
+    const author = await getUsersById(blog.authorId);
+
+    return {
+      title: `Chronicle — ${blog.title}`,
+      description:
+        truncateText(extractTextFromDelta(blog.content), 250) ||
+        "Read this blog on Chronicle.",
+      keywords: [
+        "Chronicle",
+        "blog",
+        category.name,
+        author.fullName,
+        blog.title,
+      ],
+      authors: [{ name: author.fullName }],
+      openGraph: {
+        title: blog.title,
+        description:
+          blog.summary || "Read inspiring and insightful stories on Chronicle.",
+        images: blog.image ? [blog.image] : [],
+      },
+    };
+  } catch {
+    return {
+      title: "Chronicle — Blog Not Found",
+      description: "This blog could not be found.",
+    };
+  }
+}
 
 export default async function Page({ params }) {
   const queryClient = new QueryClient();

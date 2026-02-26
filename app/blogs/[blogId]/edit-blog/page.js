@@ -2,6 +2,12 @@ import AddBlogForm from "@/app/_components/AddBlogForm";
 import { auth } from "@/app/_lib/auth";
 import { getBlog, getCategories, getCategory } from "@/app/_lib/data-service";
 
+export const metadata = {
+  title: "Chronicle — Edit Your Blog",
+  description: "Update and refine your Chronicle blog post before publishing.",
+  keywords: ["edit blog", "update article", "Chronicle editor"],
+};
+
 export default async function Page({ params }) {
   // Get the active session
   const session = await auth();
