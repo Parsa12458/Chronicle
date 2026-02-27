@@ -29,7 +29,7 @@ import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
 import { FaUserCircle } from "react-icons/fa";
 
 export async function generateMetadata({ params }) {
-  const { blogId } = params;
+  const { blogId } = await params;
 
   try {
     const blog = await getBlog(blogId);

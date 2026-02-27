@@ -14,9 +14,9 @@ async function Header() {
   const displayName = currentUser?.fullName || session?.user?.name;
 
   return (
-    <header className="grid grid-cols-3 items-center py-8 px-10">
+    <header className="grid grid-cols-3 items-center py-8 px-10 md:grid-cols-2 sm:px-6">
       <Logo />
-      <nav className="justify-self-center">
+      <nav className="justify-self-center md:hidden">
         <Link
           href="/blogs"
           className="font-medium border-b border-b-darkGreen pb-0.5 px-0.5 hover:px-2.5 transition-all duration-300 text-base"
@@ -43,7 +43,9 @@ async function Header() {
             ) : (
               <FaUserCircle size={32} className="fill-primary" />
             )}
-            <span className="font-semibold">{displayName}</span>
+            <span className="font-semibold">
+              {displayName.split(" ").at(0)}
+            </span>
           </Link>
         ) : (
           <Button href="/login">Get Started</Button>

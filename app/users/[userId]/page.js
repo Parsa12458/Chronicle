@@ -17,7 +17,7 @@ import { FaUserCircle } from "react-icons/fa";
 import { auth } from "@/app/_lib/auth";
 
 export async function generateMetadata({ params }) {
-  const { userId } = params;
+  const { userId } = await params;
 
   try {
     const user = await getUsersById(userId);

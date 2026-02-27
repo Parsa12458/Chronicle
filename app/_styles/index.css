@@ -7,7 +7,15 @@
   --color-mediumGreen: #4f6152;
   --color-darkGreen: #202721;
   --color-lightGreen: #e2ece3;
+
+  --breakpoint-*: initial;
 }
+
+@custom-variant xl (@media (max-width: 1200px));
+@custom-variant lg (@media (max-width: 900px));
+@custom-variant md (@media (max-width: 700px));
+@custom-variant sm (@media (max-width: 500px));
+
 /* file upload button */
 input[type="file"] {
   @apply text-xs leading-5;
@@ -22,8 +30,8 @@ input[type="file"]::file-selector-button {
   width: 50px;
   aspect-ratio: 1;
   border-radius: 50%;
-  background: radial-gradient(farthest-side, #6f8772 94%, #0000) top/8px 8px
-      no-repeat,
+  background:
+    radial-gradient(farthest-side, #6f8772 94%, #0000) top/8px 8px no-repeat,
     conic-gradient(#0000 30%, #6f8772);
   mask: radial-gradient(farthest-side, #0000 calc(100% - 8px), #000 0);
   -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 8px), #000 0);
@@ -35,8 +43,8 @@ input[type="file"]::file-selector-button {
   width: 13px;
   aspect-ratio: 1;
   border-radius: 50%;
-  background: radial-gradient(farthest-side, #ecf3ed 94%, #0000) top/3px 3px
-      no-repeat,
+  background:
+    radial-gradient(farthest-side, #ecf3ed 94%, #0000) top/3px 3px no-repeat,
     conic-gradient(#0000 30%, #ecf3ed);
   mask: radial-gradient(farthest-side, #0000 calc(100% - 3px), #000 0);
   -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 3px), #000 0);

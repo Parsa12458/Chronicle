@@ -17,7 +17,7 @@ async function LastBlogsList() {
   const authors = await getUsersById(authorIds);
 
   return (
-    <div className="flex gap-8 flex-wrap justify-center">
+    <div className="flex gap-8 flex-wrap justify-center xl:gap-6 lg:gap-4">
       {blogs?.length === 0 ? (
         <p className="text-xl">No blog posts available at the moment.</p>
       ) : (
@@ -26,7 +26,7 @@ async function LastBlogsList() {
             blog={blog}
             key={i}
             category={categories?.find(
-              (category) => category.id === blog.categoryId
+              (category) => category.id === blog.categoryId,
             )}
             author={authors?.find((author) => author.id === blog.authorId)}
           />
